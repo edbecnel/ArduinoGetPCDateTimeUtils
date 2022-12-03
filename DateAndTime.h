@@ -1,8 +1,6 @@
 #ifndef _DateAndTime_
 #define _DateAndTime_ 1
 
-using namespace ArduinoGetPCDateTimeUtils;
-
 typedef unsigned char byte;
 
 namespace ArduinoGetPCDateTimeUtils

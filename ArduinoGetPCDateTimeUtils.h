@@ -1,9 +1,9 @@
 #ifndef _ArduinoGetPCDateTimeUtils_
-#define _ArduinoGegtPCDateTimeUtilss_ 1
+#define _ArduinoGetPCDateTimeUtils_ 1
 
 #include "DateAndTime.h"
 
-namespace ArduinoGenUtils
+namespace ArduinoGetPCDateTimeUtils
 {
     class Utils
     {

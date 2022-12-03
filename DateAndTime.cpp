@@ -5,6 +5,8 @@
 const char compile_date[] = __DATE__;
 const char compile_time[] = __TIME__;
 
+using namespace ArduinoGetPCDateTimeUtils;
+
 DateAndTime::DateAndTime()
 {
     month = 0;
