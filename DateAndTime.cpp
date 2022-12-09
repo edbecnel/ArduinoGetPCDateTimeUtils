@@ -2,7 +2,6 @@
 #include "ArduinoGenUtils.h"
 #include <string.h>
 #include <time.h>
-#include <ctime>
 
 const char compile_date[] = __DATE__;
 const char compile_time[] = __TIME__;
