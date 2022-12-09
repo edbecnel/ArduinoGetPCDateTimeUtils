@@ -6,7 +6,7 @@
 const char compile_date[] = __DATE__;
 const char compile_time[] = __TIME__;
 
-using namespace ArduinoGenUtils;
+using namespace ArduinoGetPCDateTimeUtils;
 
 
 void convertDateAndTimeToTime_t(const DateAndTime& dateAndTime, time_t& timeT)

@@ -3,7 +3,7 @@
 
 typedef unsigned char byte;
 
-namespace ArduinoGenUtils
+namespace ArduinoGetPCDateTimeUtils
 {
     class DateAndTime
     {
