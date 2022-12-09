@@ -1,4 +1,3 @@
-#include <DateAndTime.h>
 #include <ArduinoGetPCDateTimeUtils.h>
 
 using namespace ArduinoGetPCDateTimeUtils;
