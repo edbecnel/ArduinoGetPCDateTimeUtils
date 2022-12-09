@@ -1,11 +1,38 @@
 #include "DateAndTime.h"
-#include "ArduinoGetPCDateTimeUtils.h"
+#include "ArduinoGenUtils.h"
 #include <string.h>
+#include <time.h>
+#include <ctime>
 
 const char compile_date[] = __DATE__;
 const char compile_time[] = __TIME__;
 
-using namespace ArduinoGetPCDateTimeUtils;
+using namespace ArduinoGenUtils;
+
+
+void convertDateAndTimeToTime_t(const DateAndTime& dateAndTime, time_t& timeT)
+{
+    struct tm tmDateTime;
+    tmDateTime.tm_year = dateAndTime.year - 1900;
+    tmDateTime.tm_mon = dateAndTime.month - 1;
+    tmDateTime.tm_mday = dateAndTime.day;
+    tmDateTime.tm_hour = dateAndTime.hours;
+    tmDateTime.tm_min = dateAndTime.minutes;
+    tmDateTime.tm_sec = dateAndTime.seconds;
+    tmDateTime.tm_isdst = -1;
+    timeT = mktime(&tmDateTime);
+}
+
+void convertTime_tToDateAndTime(const time_t dateAndTimeT, DateAndTime& dateAndTime)
+{
+    struct tm* newTimeTm = localtime(&dateAndTimeT);
+    dateAndTime.hours = newTimeTm->tm_hour;
+    dateAndTime.minutes = newTimeTm->tm_min;
+    dateAndTime.seconds = newTimeTm->tm_sec;
+    dateAndTime.month = newTimeTm->tm_mon + 1;
+    dateAndTime.day = newTimeTm->tm_mday;
+    dateAndTime.year = 1900 + newTimeTm->tm_year;
+}
 
 DateAndTime::DateAndTime()
 {
@@ -15,6 +42,16 @@ DateAndTime::DateAndTime()
     hours = 0;
     minutes = 0;
     seconds = 0;
+}
+
+DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal)
+{
+    month = monthVal;
+    day = dayVal;
+    year = yearVal;
+    hours = hoursVal;
+    minutes = minutesVal;
+    seconds = secondsVal;
 }
 
 bool DateAndTime::getCompileDateAndTime()
@@ -47,6 +84,53 @@ bool DateAndTime::getCompileDateAndTime()
     return true;
 }
 
+void DateAndTime::addSeconds(int secondsToAdd)
+{
+    time_t timeT = 0;
+    convertDateAndTimeToTime_t(*this, timeT);
+    time_t newDateAndTime = timeT + secondsToAdd;
+    convertTime_tToDateAndTime(newDateAndTime, *this);
+}
+
+
+void DateAndTime::addMinutes(int minutesToAdd)
+{
+    addSeconds(60 * minutesToAdd);
+}
+
+void DateAndTime::addHours(int hoursToAdd)
+{
+    addMinutes(60 * hoursToAdd);
+}
+
+void DateAndTime::addDays(int daysToAdd)
+{
+    addHours(24 * daysToAdd);
+}
+
+void DateAndTime::addTime(int days, int hours, int minutes, int seconds)
+{
+    addDays(days);
+    addHours(hours);
+    addMinutes(minutes);
+    addSeconds(seconds);
+}
+
+DateAndTimeBytes::DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byte hoursVal, byte minutesVal, byte secondsVal)
+{
+    month = monthVal;
+    day = dayVal;
+    year = yearVal;
+    hours = hoursVal;
+    minutes = minutesVal;
+    seconds = secondsVal;
+}
+
+DateAndTimeBytes::DateAndTimeBytes(const DateAndTime& dateAndTime)
+{
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
 DateAndTimeBytes::DateAndTimeBytes()
 {
     month = 0;
@@ -66,6 +150,59 @@ bool DateAndTimeBytes::getCompileDateAndTime()
     return true;
 }
 
+void DateAndTimeBytes::addSeconds(byte secondsToAdd)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    dateAndTime.addSeconds((int)secondsToAdd);
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
+
+void DateAndTimeBytes::addMinutes(byte minutesToAdd)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    dateAndTime.addMinutes((int)minutesToAdd);
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
+void DateAndTimeBytes::addHours(byte hoursToAdd)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    dateAndTime.addHours((int)hoursToAdd);
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
+void DateAndTimeBytes::addDays(byte daysToAdd)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    dateAndTime.addDays((int)daysToAdd);
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
+void DateAndTimeBytes::addTime(byte days, byte hours, byte minutes, byte seconds)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    dateAndTime.addDays((int)days);
+    dateAndTime.addHours((int)hours);
+    dateAndTime.addMinutes((int)minutes);
+    dateAndTime.addSeconds((int)seconds);
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
+void DateAndTimeBytes::convertToDateAndTime(DateAndTime& dateAndTime)
+{
+    dateAndTime.day = (int)day;
+    dateAndTime.month = (int)month;
+    dateAndTime.year = (int)year + 2000;
+    dateAndTime.hours = (int)hours;
+    dateAndTime.minutes = (int)minutes;
+    dateAndTime.seconds = (int)seconds;
+}
 
 void DateAndTimeBytes::convertDateAndTimeToBytes(const DateAndTime& dateAndTime)
 {

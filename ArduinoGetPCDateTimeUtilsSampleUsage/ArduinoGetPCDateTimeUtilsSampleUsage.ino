@@ -15,6 +15,26 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  delay(10000);
 
+  // put your main code here, to run repeatedly:
+  byte year = 22;
+  byte month = 12;
+  byte day = 31;
+  byte hours = 23;
+  byte minutes = 58;
+  byte seconds = 0;
+
+  // year = rtc.getYear();
+  // month = rtc.getMonth();
+  // day = rtc.getDay();
+  // hours = rtc.getHours();
+  // minutes = rtc.getMinutes();
+  // seconds = rtc.getSeconds();
+
+  DateAndTimeBytes dateAndTimeBytes(month, day, year, hours, minutes, seconds);
+  dateAndTimeBytes.addMinutes(10);
+
+  // rtc.setAlarmDate(day, month, year);
+  // rtc.setAlarmTime(hours, minutes, seconds);
 }
