@@ -22,6 +22,9 @@ namespace ArduinoGetPCDateTimeUtils
         void addHours(int hours);
         void addDays(int days);
         void addTime(int days, int hours, int minutes, int seconds);
+        char* toString();
+    private:
+        static char stringBuffer[81];
     };
 
     class DateAndTimeBytes
@@ -44,6 +47,9 @@ namespace ArduinoGetPCDateTimeUtils
         void addTime(byte days, byte hours, byte minutes, byte seconds);
         void convertToDateAndTime(DateAndTime&);
         void convertDateAndTimeToBytes(const DateAndTime&);
+        char* toString();
+    private:
+        static char stringBuffer[81];
     };
 }
 #endif  // _DateAndTime

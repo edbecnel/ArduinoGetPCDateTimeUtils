@@ -33,24 +33,13 @@ void convertTime_tToDateAndTime(const time_t dateAndTimeT, DateAndTime& dateAndT
     dateAndTime.year = 1900 + newTimeTm->tm_year;
 }
 
-DateAndTime::DateAndTime()
+DateAndTime::DateAndTime() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0), toStringBuffer("")
 {
-    month = 0;
-    day = 0;
-    year = 0;
-    hours = 0;
-    minutes = 0;
-    seconds = 0;
 }
 
-DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal)
+DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal) :
+    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), seconds(secondsVal), toStringBuffer("")
 {
-    month = monthVal;
-    day = dayVal;
-    year = yearVal;
-    hours = hoursVal;
-    minutes = minutesVal;
-    seconds = secondsVal;
 }
 
 bool DateAndTime::getCompileDateAndTime()
@@ -115,29 +104,26 @@ void DateAndTime::addTime(int days, int hours, int minutes, int seconds)
     addSeconds(seconds);
 }
 
-DateAndTimeBytes::DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byte hoursVal, byte minutesVal, byte secondsVal)
+char* DateAndTime::toString()
 {
-    month = monthVal;
-    day = dayVal;
-    year = yearVal;
-    hours = hoursVal;
-    minutes = minutesVal;
-    seconds = secondsVal;
+    sprintf(toStringBuffer, "%02d/%02d/%04d %02d:%02d:%02d", month, day, year, hours, minutes, seconds);
+    return toStringBuffer;
+}
+
+
+DateAndTimeBytes::DateAndTimeBytes() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0), toStringBuffer("")
+{
+}
+
+DateAndTimeBytes::DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byte hoursVal, byte minutesVal, byte secondsVal) :
+    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), toStringBuffer("")
+
+{
 }
 
 DateAndTimeBytes::DateAndTimeBytes(const DateAndTime& dateAndTime)
 {
     convertDateAndTimeToBytes(dateAndTime);
-}
-
-DateAndTimeBytes::DateAndTimeBytes()
-{
-    month = 0;
-    day = 0;
-    year = 0;
-    hours = 0;
-    minutes = 0;
-    seconds = 0;
 }
 
 bool DateAndTimeBytes::getCompileDateAndTime()
@@ -212,3 +198,10 @@ void DateAndTimeBytes::convertDateAndTimeToBytes(const DateAndTime& dateAndTime)
     minutes = (byte)dateAndTime.minutes;
     seconds = (byte)dateAndTime.seconds;
 }
+
+char* DateAndTimeBytes::toString()
+{
+    sprintf(toStringBuffer, "%02d/%02d/%02d %02d:%02d:%02d", month, day, year, hours, minutes, seconds);
+    return toStringBuffer;
+}
+
