@@ -2,6 +2,7 @@
 #include "ArduinoGetPCDateTimeUtils.h"
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
 
 const char compile_date[] = __DATE__;
 const char compile_time[] = __TIME__;
