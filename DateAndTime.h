@@ -21,7 +21,9 @@ namespace ArduinoGetPCDateTimeUtils
         void addMinutes(int minutes);
         void addHours(int hours);
         void addDays(int days);
-        void addTime(int days, int hours, int minutes, int seconds);
+        void addMonths(int months);
+        void addYears(int years);
+        void addTime(int years, int months, int days, int hours, int minutes, int seconds);
         char* toString();
     private:
         char toStringBuffer[20];

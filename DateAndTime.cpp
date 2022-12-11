@@ -3,13 +3,14 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
+#include <math.h>
 
 const char compile_date[] = __DATE__;
 const char compile_time[] = __TIME__;
 
 using namespace ArduinoGetPCDateTimeUtils;
 
-
+#pragma region ConvertTimeLocalHelperFunctions
 void convertDateAndTimeToTime_t(const DateAndTime& dateAndTime, time_t& timeT)
 {
     struct tm tmDateTime;
@@ -33,7 +34,9 @@ void convertTime_tToDateAndTime(const time_t dateAndTimeT, DateAndTime& dateAndT
     dateAndTime.day = newTimeTm->tm_mday;
     dateAndTime.year = 1900 + newTimeTm->tm_year;
 }
+#pragma endregion ConvertTimeLocalHelperFunctions
 
+#pragma region DateAndTime
 DateAndTime::DateAndTime() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0), toStringBuffer("")
 {
 }
@@ -81,7 +84,6 @@ void DateAndTime::addSeconds(int secondsToAdd)
     convertTime_tToDateAndTime(newDateAndTime, *this);
 }
 
-
 void DateAndTime::addMinutes(int minutesToAdd)
 {
     addSeconds(60 * minutesToAdd);
@@ -97,8 +99,33 @@ void DateAndTime::addDays(int daysToAdd)
     addHours(24 * daysToAdd);
 }
 
-void DateAndTime::addTime(int days, int hours, int minutes, int seconds)
+void DateAndTime::addMonths(int monthsToAdd)
 {
+    double yearsDouble = monthsToAdd / 12.0;
+    int yearsInt = floor(yearsDouble);
+    if (yearsInt > 0)
+    {
+        addYears(yearsInt);
+        double monthsDouble = yearsDouble - (double)yearsInt;
+        monthsDouble = monthsDouble * 12.0;
+        monthsToAdd = (int)monthsDouble;
+    }
+    month += monthsToAdd;
+    if (month > 12)
+    {
+        month = month - 12;
+    }
+}
+
+void DateAndTime::addYears(int yearsToAdd)
+{
+    year += yearsToAdd;
+}
+
+void DateAndTime::addTime(int years, int months, int days, int hours, int minutes, int seconds)
+{
+    addYears(years);
+    addMonths(months);
     addDays(days);
     addHours(hours);
     addMinutes(minutes);
@@ -110,8 +137,9 @@ char* DateAndTime::toString()
     sprintf(toStringBuffer, "%02d/%02d/%04d %02d:%02d:%02d", month, day, year, hours, minutes, seconds);
     return toStringBuffer;
 }
+#pragma endregion DateAndTime
 
-
+#pragma region DateAndTimeBytes
 DateAndTimeBytes::DateAndTimeBytes() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0), toStringBuffer("")
 {
 }
@@ -144,7 +172,6 @@ void DateAndTimeBytes::addSeconds(byte secondsToAdd)
     convertDateAndTimeToBytes(dateAndTime);
 }
 
-
 void DateAndTimeBytes::addMinutes(byte minutesToAdd)
 {
     DateAndTime dateAndTime;
@@ -169,14 +196,27 @@ void DateAndTimeBytes::addDays(byte daysToAdd)
     convertDateAndTimeToBytes(dateAndTime);
 }
 
-void DateAndTimeBytes::addTime(byte days, byte hours, byte minutes, byte seconds)
+void DateAndTimeBytes::addMonths(byte monthsToAdd)
 {
     DateAndTime dateAndTime;
     convertToDateAndTime(dateAndTime);
-    dateAndTime.addDays((int)days);
-    dateAndTime.addHours((int)hours);
-    dateAndTime.addMinutes((int)minutes);
-    dateAndTime.addSeconds((int)seconds);
+    dateAndTime.addMonths((int)monthsToAdd);
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
+void DateAndTimeBytes::addYears(byte yearsToAdd)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    dateAndTime.addYears((int)yearsToAdd);
+    convertDateAndTimeToBytes(dateAndTime);
+}
+
+void DateAndTimeBytes::addTime(byte years, byte months, byte days, byte hours, byte minutes, byte seconds)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    dateAndTime.addTime((int)years, (int)months, (int)days, (int)hours, (int)minutes, (int)seconds);
     convertDateAndTimeToBytes(dateAndTime);
 }
 
@@ -205,4 +245,4 @@ char* DateAndTimeBytes::toString()
     sprintf(toStringBuffer, "%02d/%02d/%02d %02d:%02d:%02d", month, day, year, hours, minutes, seconds);
     return toStringBuffer;
 }
-
+#pragma endregion DateAndTimeBytes
