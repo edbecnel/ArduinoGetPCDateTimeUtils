@@ -46,7 +46,9 @@ namespace ArduinoGetPCDateTimeUtils
         void addMinutes(byte minutes);
         void addHours(byte hours);
         void addDays(byte days);
-        void addTime(byte days, byte hours, byte minutes, byte seconds);
+        void addMonths(byte months);
+        void addYears(byte years);
+        void addTime(byte years, byte months, byte days, byte hours, byte minutes, byte seconds);
         void convertToDateAndTime(DateAndTime&);
         void convertDateAndTimeToBytes(const DateAndTime&);
         char* toString();
