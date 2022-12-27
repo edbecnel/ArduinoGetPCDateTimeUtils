@@ -37,12 +37,12 @@ void convertTime_tToDateAndTime(const time_t dateAndTimeT, DateAndTime& dateAndT
 #pragma endregion ConvertTimeLocalHelperFunctions
 
 #pragma region DateAndTime
-DateAndTime::DateAndTime() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0), toStringBuffer("")
+DateAndTime::DateAndTime() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0)
 {
 }
 
 DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal) :
-    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), seconds(secondsVal), toStringBuffer("")
+    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), seconds(secondsVal)
 {
 }
 
@@ -132,11 +132,6 @@ void DateAndTime::addTime(int years, int months, int days, int hours, int minute
     addSeconds(seconds);
 }
 
-char* DateAndTime::toString()
-{
-    sprintf(toStringBuffer, "%02d/%02d/%04d %02d:%02d:%02d", month, day, year, hours, minutes, seconds);
-    return toStringBuffer;
-}
 #pragma endregion DateAndTime
 
 #pragma region DateAndTimeBytes
@@ -145,7 +140,7 @@ DateAndTimeBytes::DateAndTimeBytes() : month(0), day(0), year(0), hours(0), minu
 }
 
 DateAndTimeBytes::DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byte hoursVal, byte minutesVal, byte secondsVal) :
-    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), toStringBuffer("")
+    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal)
 
 {
 }
@@ -238,11 +233,5 @@ void DateAndTimeBytes::convertDateAndTimeToBytes(const DateAndTime& dateAndTime)
     hours = (byte)dateAndTime.hours;
     minutes = (byte)dateAndTime.minutes;
     seconds = (byte)dateAndTime.seconds;
-}
-
-char* DateAndTimeBytes::toString()
-{
-    sprintf(toStringBuffer, "%02d/%02d/%02d %02d:%02d:%02d", month, day, year, hours, minutes, seconds);
-    return toStringBuffer;
 }
 #pragma endregion DateAndTimeBytes
