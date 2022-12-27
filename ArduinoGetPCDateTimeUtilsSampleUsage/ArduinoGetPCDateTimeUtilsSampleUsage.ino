@@ -34,8 +34,6 @@ void loop() {
 
   DateAndTimeBytes dateAndTimeBytes(month, day, year, hours, minutes, seconds);
   dateAndTimeBytes.addMinutes(10);
-  char* dateAndTimeText = dateAndTimeBytes.toString();
-  // dateAndTimeText will contain the date and time in a user-friendly/readable formmat
 
   // rtc.setAlarmDate(day, month, year);
   // rtc.setAlarmTime(hours, minutes, seconds);
