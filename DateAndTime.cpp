@@ -135,7 +135,7 @@ void DateAndTime::addTime(int years, int months, int days, int hours, int minute
 #pragma endregion DateAndTime
 
 #pragma region DateAndTimeBytes
-DateAndTimeBytes::DateAndTimeBytes() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0), toStringBuffer("")
+DateAndTimeBytes::DateAndTimeBytes() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0)
 {
 }
 
