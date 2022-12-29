@@ -8,7 +8,6 @@ namespace ArduinoGetPCDateTimeUtils
     class Utils
     {
     public:
-        static bool strncmpi(const char*, const char*, int);
         static int convertMonthToInt(const char*);
         static int convertCharToInt(const char*, int);
     };

@@ -5,20 +5,6 @@
 
 using namespace ArduinoGetPCDateTimeUtils;
 
-bool Utils::strncmpi(const char* a, const char* b, int count)
-{
-    int la = sizeof(a) / sizeof(char);
-    int lb = sizeof(b) / sizeof(char);
-    if (la < count || lb < count)
-        return false;
-    for (lb = 0; lb < la && lb < count; lb++)
-    {
-        if (toupper(a[lb]) != toupper(b[lb]))
-            return false;
-    }
-    return true;
-}
-
 int Utils::convertMonthToInt(const char* month)
 {
     int iMonth = 0;
