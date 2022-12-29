@@ -48,29 +48,22 @@ DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, in
 
 bool DateAndTime::getCompileDateAndTime()
 {
-    int dateSize = sizeof(compile_date) / sizeof(char);
-    if (dateSize < 11)
-        return false;
-    char monthChar[3];
+    char monthChar[4] = "";
     strncpy(monthChar, compile_date, 3);
     month = Utils::convertMonthToInt(monthChar);
-    char dayChar[2];
+    char dayChar[3] = "";
     strncpy(dayChar, &compile_date[4], 2);
     day = Utils::convertCharToInt(dayChar, 2);
-    char yearChar[4];
+    char yearChar[5] = "";
     strncpy(yearChar, &compile_date[7], 4);
     year = Utils::convertCharToInt(yearChar, 4);
-
-    int timeSize = sizeof(compile_time) / sizeof(char);
-    if (timeSize < 9)
-        return false;
-    char hour[2];
+    char hour[3] = "";
     strncpy(hour, compile_time, 2);
     hours = Utils::convertCharToInt(hour, 2);
-    char min[2];
+    char min[3] = "";
     strncpy(min, &compile_time[3], 2);
     minutes = Utils::convertCharToInt(min, 2);
-    char sec[2];
+    char sec[3] = "";
     strncpy(sec, &compile_time[6], 2);
     seconds = Utils::convertCharToInt(sec, 2);
     return true;
@@ -131,7 +124,6 @@ void DateAndTime::addTime(int years, int months, int days, int hours, int minute
     addMinutes(minutes);
     addSeconds(seconds);
 }
-
 #pragma endregion DateAndTime
 
 #pragma region DateAndTimeBytes
@@ -140,8 +132,7 @@ DateAndTimeBytes::DateAndTimeBytes() : month(0), day(0), year(0), hours(0), minu
 }
 
 DateAndTimeBytes::DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byte hoursVal, byte minutesVal, byte secondsVal) :
-    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal)
-
+    month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), seconds(secondsVal)
 {
 }
 
@@ -166,6 +157,7 @@ void DateAndTimeBytes::addSeconds(byte secondsToAdd)
     dateAndTime.addSeconds((int)secondsToAdd);
     convertDateAndTimeToBytes(dateAndTime);
 }
+
 
 void DateAndTimeBytes::addMinutes(byte minutesToAdd)
 {

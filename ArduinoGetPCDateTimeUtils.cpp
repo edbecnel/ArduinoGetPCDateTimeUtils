@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "ArduinoGetPCDateTimeUtils.h"
+#include <string.h>
 
 using namespace ArduinoGetPCDateTimeUtils;
 
@@ -20,32 +21,30 @@ bool Utils::strncmpi(const char* a, const char* b, int count)
 
 int Utils::convertMonthToInt(const char* month)
 {
-    int iMonth = -1;
-    if (month == nullptr || sizeof(month) / sizeof(char) < 3)
-        return iMonth;
-    if (strncmpi(month, "JAN", 3))
+    int iMonth = 0;
+    if (strcmp(month, "Jan") == 0)
         iMonth = 1;
-    else if (strncmpi(month, "FEB", 3))
+    else if (strcmp(month, "Feb") == 0)
         iMonth = 2;
-    else if (strncmpi(month, "MAR", 3))
+    else if (strcmp(month, "Mar") == 0)
         iMonth = 3;
-    else if (strncmpi(month, "APR", 3))
+    else if (strcmp(month, "Apr") == 0)
         iMonth = 4;
-    else if (strncmpi(month, "MAY", 3))
+    else if (strcmp(month, "May") == 0)
         iMonth = 5;
-    else if (strncmpi(month, "JUN", 3))
+    else if (strcmp(month, "Jun") == 0)
         iMonth = 6;
-    else if (strncmpi(month, "JUL", 3))
+    else if (strcmp(month, "Jul") == 0)
         iMonth = 7;
-    else if (strncmpi(month, "AUG", 3))
+    else if (strcmp(month, "Aug") == 0)
         iMonth = 8;
-    else if (strncmpi(month, "SEP", 3))
+    else if (strcmp(month, "Sep") == 0)
         iMonth = 9;
-    else if (strncmpi(month, "OCT", 3))
+    else if (strcmp(month, "Oct") == 0)
         iMonth = 10;
-    else if (strncmpi(month, "NOV", 3))
+    else if (strcmp(month, "Nov") == 0)
         iMonth = 11;
-    else if (strncmpi(month, "DEC", 3))
+    else if (strcmp(month, "Dec") == 0)
         iMonth = 12;
 
     return iMonth;
