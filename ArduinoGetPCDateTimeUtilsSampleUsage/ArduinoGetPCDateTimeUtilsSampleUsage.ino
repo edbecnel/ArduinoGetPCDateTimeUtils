@@ -9,12 +9,12 @@ int setDay;
 int setHours;
 int setMinutes;
 int setSeconds;
-int alarmYear;
-int alarmMonth;
-int alarmDay;
-int alarmHours;
-int alarmMinutes;
-int alarmSeconds;
+byte alarmMonth = 2;
+byte alarmYear = 22;
+byte alarmDay = 28;
+byte alarmHours = 13;
+byte alarmMinutes = 2;
+byte alarmSeconds 15;
 DateAndTimeBytes compileDateAndTimeBytes;
 
 void setup() {
@@ -60,10 +60,16 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  // TODO: Replace the following with getting these values from the RTCZero object:
+  byte currMonth = 1;
+  byte currDay = 31;
+  byte currYear = 23;
+  byte currHours = 10;
+  byte currMinutes = 13;
+  byte currSeconds = 5;
+  DateAndTimeBytes currentDateAndTime(currMonth, currDay, currYear, currHours, currMinutes, currSeconds);
   DateAndTimeBytes alarmDateAndTime(alarmMonth, alarmDay, alarmYear, alarmHours, alarmMinutes, alarmSeconds);
-  int hoursToAlarm, minutesToAlarm, secondsToAlarm;
-  // Get the remaining seconds to the alarm...
-  secondsToAlarm = compileDateAndTimeBytes.secondsTo(alarmDateAndTime);
-  // Get the remaining hours, minutes, and seconds to the alarm...
-  compileDateAndTimeBytes.getHoursMinutesSecondsTo(alarmDateAndTime, hoursToAlarm, minutesToAlarm, secondsToAlarm);
+  int daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm;
+  // Get the remaining days, hours, minutes, and seconds to the alarm...
+  currentDateAndTime.getDaysHoursMinutesSecondsTo(alarmDateAndTime, daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm);
 }

@@ -61,12 +61,14 @@ int DateAndTime::secondsTo(DateAndTime& otherDateTime)
     return (int) diffInSeconds;
 }
 
-void DateAndTime::getHoursMinutesSecondsTo(DateAndTime& otherDateTime, int& hours, int& minutes, int& seconds)
+void DateAndTime::getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, int& days, int& hours, int& minutes, int& seconds)
 {
     int secondsTo = this->secondsTo(otherDateTime);
     minutes = secondsTo / 60;
     seconds = secondsTo % 60;
     hours = minutes / 60;
+    days = hours / 24;
+    hours = hours % 24;
     minutes = minutes % 60;
 }
 
@@ -174,13 +176,13 @@ int DateAndTimeBytes::secondsTo(DateAndTimeBytes& otherDateTimeBytes)
     return dateAndTime.secondsTo(otherDateTime);
 }
 
-void DateAndTimeBytes::getHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, int& hours, int& minutes, int& seconds)
+void DateAndTimeBytes::getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, int& days, int& hours, int& minutes, int& seconds)
 {
     DateAndTime dateAndTime;
     convertToDateAndTime(dateAndTime);
     DateAndTime otherDateTime;
     otherDateTimeBytes.convertToDateAndTime(otherDateTime);
-    dateAndTime.getHoursMinutesSecondsTo(otherDateTime, hours, minutes, seconds);
+    dateAndTime.getDaysHoursMinutesSecondsTo(otherDateTime, days, hours, minutes, seconds);
 }
 
 bool DateAndTimeBytes::getCompileDateAndTime()
