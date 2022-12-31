@@ -10,6 +10,9 @@ namespace ArduinoGetPCDateTimeUtils
     public:
         DateAndTime();
         DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal);
+        DateAndTime(const DateAndTime& dateAndTime);
+        int secondsTo(DateAndTime& otherDateTime);
+        void getHoursMinutesSecondsTo(DateAndTime& otherDateTime, int& hours, int& minutes, int& seconds);
         int month;
         int day;
         int year;
@@ -32,6 +35,8 @@ namespace ArduinoGetPCDateTimeUtils
         DateAndTimeBytes();
         DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byte hoursVal, byte minutesVal, byte secondsVal);
         DateAndTimeBytes(const DateAndTime&);
+        int secondsTo(DateAndTimeBytes& otherDateTimeBytes);
+        void getHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, int& hours, int& minutes, int& seconds);
         byte month;
         byte day;
         byte year;

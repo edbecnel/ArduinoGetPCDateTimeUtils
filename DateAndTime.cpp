@@ -46,6 +46,30 @@ DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, in
 {
 }
 
+DateAndTime::DateAndTime(const DateAndTime& dateAndTime) :
+    month(dateAndTime.month), day(dateAndTime.day), year(dateAndTime.year), hours(dateAndTime.hours), minutes(dateAndTime.minutes), seconds(dateAndTime.seconds)
+{
+}
+
+int DateAndTime::secondsTo(DateAndTime& otherDateTime)
+{
+    time_t time1 = 0;
+    convertDateAndTimeToTime_t(otherDateTime, time1);
+    time_t time2 = 0;
+    convertDateAndTimeToTime_t(*this, time2);
+    double diffInSeconds = difftime(time1, time2);
+    return (int) diffInSeconds;
+}
+
+void DateAndTime::getHoursMinutesSecondsTo(DateAndTime& otherDateTime, int& hours, int& minutes, int& seconds)
+{
+    int secondsTo = this->secondsTo(otherDateTime);
+    minutes = secondsTo / 60;
+    seconds = secondsTo % 60;
+    hours = minutes / 60;
+    minutes = minutes % 60;
+}
+
 bool DateAndTime::getCompileDateAndTime()
 {
     char monthChar[4] = "";
@@ -95,7 +119,7 @@ void DateAndTime::addDays(int daysToAdd)
 void DateAndTime::addMonths(int monthsToAdd)
 {
     double yearsDouble = monthsToAdd / 12.0;
-    int yearsInt = floor(yearsDouble);
+    int yearsInt = (int)floor(yearsDouble);
     if (yearsInt > 0)
     {
         addYears(yearsInt);
@@ -136,9 +160,27 @@ DateAndTimeBytes::DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byt
 {
 }
 
-DateAndTimeBytes::DateAndTimeBytes(const DateAndTime& dateAndTime)
+DateAndTimeBytes::DateAndTimeBytes(const DateAndTime& dateAndTime) :
+    month(dateAndTime.month), day(dateAndTime.day), year(dateAndTime.year), hours(dateAndTime.hours), minutes(dateAndTime.minutes), seconds(dateAndTime.seconds)
 {
-    convertDateAndTimeToBytes(dateAndTime);
+}
+
+int DateAndTimeBytes::secondsTo(DateAndTimeBytes& otherDateTimeBytes)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    DateAndTime otherDateTime;
+    otherDateTimeBytes.convertToDateAndTime(otherDateTime);
+    return dateAndTime.secondsTo(otherDateTime);
+}
+
+void DateAndTimeBytes::getHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, int& hours, int& minutes, int& seconds)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    DateAndTime otherDateTime;
+    otherDateTimeBytes.convertToDateAndTime(otherDateTime);
+    dateAndTime.getHoursMinutesSecondsTo(otherDateTime, hours, minutes, seconds);
 }
 
 bool DateAndTimeBytes::getCompileDateAndTime()
