@@ -9,13 +9,41 @@ byte alarmDay;
 byte alarmHours;
 byte alarmMinutes;
 byte alarmSeconds;
+
+byte currMonth;
+byte currDay;
+byte currYear;
+byte currHours;
+byte currMinutes;
+byte currSeconds;
+
+int delayInSecs = 5;
+
 DateAndTimeBytes compileDateAndTimeBytes;
+
+void GetCurrentDateAndTime()
+{
+  // currMonth = rtc.getMonth();
+  // currDay = rtc.getDay();
+  // currYear = rtc.getYear();
+  // currHours = rtc.getHours();
+  // currMinutes = rtc.getMinutes();
+  // currSeconds = rtc.getSeconds();
+  currMonth = 12;
+  currDay = 31;
+  currYear = 22;
+  currHours = 23;
+  currMinutes = 13;
+  currSeconds = 5;
+}
 
 // RTCZero rtc;
 void setup() {
   Serial.begin(115200);
 
   // rtc.begin();  // nitialize RTC 24H format
+
+  GetCurrentDateAndTime();
 
   // put your setup code here, to run once:
   bool success = compileDateAndTimeBytes.getCompileDateAndTime();
@@ -33,23 +61,29 @@ void setup() {
     // setSeconds = rtc.getSeconds();
 
     // Set the alarm date and time on the RTCZero board...
-    alarmMonth = 2;
-    alarmDay = 28;
+    // alarmMonth = 11;
+    // alarmDay = 3;
+    // alarmYear = 23;
+    // alarmHours = 1;
+    // alarmMinutes = 23;
+    // alarmSeconds = 52;
+    alarmMonth = 12;
+    alarmDay = 31;
     alarmYear = 22;
-    alarmHours = 13;
-    alarmMinutes = 2;
-    alarmSeconds = 15;
+    alarmHours = 23;
+    alarmMinutes = 14;
+    alarmSeconds = 50;
+
     // rtc.setAlarmDate(alarmDay, alarmMonth, alarmYear);
     // Set alarm time
     // rtc.setAlarmTime(alarmHours, alarmMinutes, alarmSeconds);
   }
 }
 
-
 void loop() {
   // put your main code here, to run repeatedly:
 
-  delay(5000);
+  delay(delayInSecs * 1000);
 
   // TODO:
   // Replace hard-coded values with values retrieve from the RTCZero object by commenting out lines with
@@ -62,24 +96,33 @@ void loop() {
   // alarmHours = rtc.getAlarmHours();
   // alarmMinutes = rtc.getAlarmMinutes();
   // alarmSeconds = rtc.getAlarmSeconds();
-
-  byte currMonth = 1;
-  byte currDay = 31;
-  byte currYear = 22;
-  byte currHours = 10;
-  byte currMinutes = 13;
-  byte currSeconds = 5;
-  // byte currMonth = rtc.getMonth();
-  // byte currDay = rtc.getDay();
-  // byte currYear = rtc.getYear();
-  // byte currHours = rtc.getHours();
-  // byte currMinutes = rtc.getMinutes();
-  // byte currSeconds = rtc.getSeconds();
-
+  // Get the current rtc date and time
+  // GetCurrentDateAndTime();
+  
+  // Simulated clock ticking up.
+  // WARNING: Only works until the current day goes over 28, then resets the current day to 1
+  currSeconds += (byte)delayInSecs;
+  if (currSeconds > 59)
+  {
+    currSeconds = 0;
+    currMinutes++;
+    if (currMinutes > 59)
+    {
+      currMinutes = 0;
+      if (currHours > 23)
+      {
+        currHours = 0;
+        currDay++;
+        if (currDay > 28)
+          currDay = 1;
+      }
+    }
+  }
+   
   // DateAndTimeBytes currentDateAndTime(currMonth, currDay, currYear, currHours, currMinutes, currSeconds);
   // DateAndTimeBytes alarmDateAndTime(alarmMonth, alarmDay, alarmYear, alarmHours, alarmMinutes, alarmSeconds);
-  DateAndTime currentDateAndTime(12, 31, 2022, 23, 0, 0);
-  DateAndTime alarmDateAndTime(11, 3, 2023, 1, 13, 10);
+  DateAndTimeBytes currentDateAndTime(currMonth, currDay, currYear, currHours, currMinutes, currSeconds);
+  DateAndTimeBytes alarmDateAndTime(alarmMonth, alarmDay, alarmYear, alarmHours, alarmMinutes, alarmSeconds);
  
   long daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm;
   // Get the remaining days, hours, minutes, and seconds to the alarm...
@@ -93,4 +136,12 @@ void loop() {
   Serial.print(buffer);
   sprintf(buffer, "Seconds = %02d", secondsToAlarm);
   Serial.println(buffer);
+
+  // TODO: Remove the following when using the rtc object. It's used here only for debugging purposes.
+  // Reset the current date and time back to its initial settings when the alarm is time has been reached (secondsTo remaining is 0 or less).
+  long secondsTo = currentDateAndTime.secondsTo(alarmDateAndTime);
+  if (secondsTo <= 0)
+  {
+    GetCurrentDateAndTime();
+  }
 }
