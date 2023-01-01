@@ -53,9 +53,9 @@ DateAndTime::DateAndTime(const DateAndTime& dateAndTime) :
 
 int DateAndTime::secondsTo(DateAndTime& otherDateTime)
 {
-    time_t time1 = 0;
+    time_t time1;
     convertDateAndTimeToTime_t(otherDateTime, time1);
-    time_t time2 = 0;
+    time_t time2;
     convertDateAndTimeToTime_t(*this, time2);
     double diffInSeconds = difftime(time1, time2);
     return (int) diffInSeconds;
