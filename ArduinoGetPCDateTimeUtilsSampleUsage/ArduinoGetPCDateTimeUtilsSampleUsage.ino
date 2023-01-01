@@ -12,7 +12,6 @@ byte alarmSeconds;
 DateAndTimeBytes compileDateAndTimeBytes;
 
 // RTCZero rtc;
-
 void setup() {
   Serial.begin(115200);
 
@@ -50,6 +49,12 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
+  delay(5000);
+
+  // TODO:
+  // Replace hard-coded values with values retrieve from the RTCZero object by commenting out lines with
+  // hard-coded values and uncommenting lines with procedurally retreived values from the rtc object.
+
   // Get the alarm date and time that was  set on the board...
   // alarmMonth = rtc.getAlarmMonth();
   // alarmDay = rtc.getAlarmDay();
@@ -58,10 +63,9 @@ void loop() {
   // alarmMinutes = rtc.getAlarmMinutes();
   // alarmSeconds = rtc.getAlarmSeconds();
 
-  // TODO: Replace the following with getting these values from the RTCZero object:
   byte currMonth = 1;
   byte currDay = 31;
-  byte currYear = 23;
+  byte currYear = 22;
   byte currHours = 10;
   byte currMinutes = 13;
   byte currSeconds = 5;
@@ -72,15 +76,21 @@ void loop() {
   // byte currMinutes = rtc.getMinutes();
   // byte currSeconds = rtc.getSeconds();
 
-
-  DateAndTimeBytes currentDateAndTime(currMonth, currDay, currYear, currHours, currMinutes, currSeconds);
-  DateAndTimeBytes alarmDateAndTime(alarmMonth, alarmDay, alarmYear, alarmHours, alarmMinutes, alarmSeconds);
-  int daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm;
+  // DateAndTimeBytes currentDateAndTime(currMonth, currDay, currYear, currHours, currMinutes, currSeconds);
+  // DateAndTimeBytes alarmDateAndTime(alarmMonth, alarmDay, alarmYear, alarmHours, alarmMinutes, alarmSeconds);
+  DateAndTime currentDateAndTime(12, 31, 2022, 23, 0, 0);
+  DateAndTime alarmDateAndTime(11, 3, 2023, 1, 13, 10);
+ 
+  long daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm;
   // Get the remaining days, hours, minutes, and seconds to the alarm...
-  // currentDateAndTime.getDaysHoursMinutesSecondsTo(alarmDateAndTime, daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm);
+  currentDateAndTime.getDaysHoursMinutesSecondsTo(alarmDateAndTime, daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm);
   char buffer[100];
-  sprintf(buffer, "Time remaining: %02d days %02d hours %02d minutes %02d seconds", daysToAlarm, hoursToAlarm, minutesToAlarm, secondsToAlarm);
+  sprintf(buffer, "Time remaining: Days = %02d ", daysToAlarm);
+  Serial.print(buffer);
+  sprintf(buffer, "Hours = %02d ", hoursToAlarm);
+  Serial.print(buffer);
+  sprintf(buffer, "Minutes = %02d ", minutesToAlarm);
+  Serial.print(buffer);
+  sprintf(buffer, "Seconds = %02d", secondsToAlarm);
   Serial.println(buffer);
-
-  delay(10000);
 }
