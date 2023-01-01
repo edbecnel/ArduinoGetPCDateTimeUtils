@@ -51,19 +51,20 @@ DateAndTime::DateAndTime(const DateAndTime& dateAndTime) :
 {
 }
 
-int DateAndTime::secondsTo(DateAndTime& otherDateTime)
+long DateAndTime::secondsTo(DateAndTime& otherDateTime)
 {
     time_t time1;
     convertDateAndTimeToTime_t(otherDateTime, time1);
     time_t time2;
     convertDateAndTimeToTime_t(*this, time2);
-    double diffInSeconds = difftime(time1, time2);
-    return (int) diffInSeconds;
+    double dDiffInSeconds = difftime(time1, time2);
+    long lDiffInSeconds = floor(dDiffInSeconds);
+    return lDiffInSeconds;
 }
 
-void DateAndTime::getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, int& days, int& hours, int& minutes, int& seconds)
+void DateAndTime::getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, long& days, long& hours, long& minutes, long& seconds)
 {
-    int secondsTo = this->secondsTo(otherDateTime);
+    long secondsTo = this->secondsTo(otherDateTime);
     minutes = secondsTo / 60;
     seconds = secondsTo % 60;
     hours = minutes / 60;
@@ -167,7 +168,7 @@ DateAndTimeBytes::DateAndTimeBytes(const DateAndTime& dateAndTime) :
 {
 }
 
-int DateAndTimeBytes::secondsTo(DateAndTimeBytes& otherDateTimeBytes)
+long DateAndTimeBytes::secondsTo(DateAndTimeBytes& otherDateTimeBytes)
 {
     DateAndTime dateAndTime;
     convertToDateAndTime(dateAndTime);
@@ -176,7 +177,7 @@ int DateAndTimeBytes::secondsTo(DateAndTimeBytes& otherDateTimeBytes)
     return dateAndTime.secondsTo(otherDateTime);
 }
 
-void DateAndTimeBytes::getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, int& days, int& hours, int& minutes, int& seconds)
+void DateAndTimeBytes::getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, long& days, long& hours, long& minutes, long& seconds)
 {
     DateAndTime dateAndTime;
     convertToDateAndTime(dateAndTime);
