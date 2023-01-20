@@ -7,11 +7,15 @@ using namespace ArduinoGetPCDateTimeUtils;
 
 DaysAndTime::DaysAndTime() : _days(0), _hours(0), _minutes(0), _seconds(0)
 {
+    _isNull = true;
+    _isNormalized = false;
 }
 
 DaysAndTime::DaysAndTime(long days, long hours, long minutes, long seconds, bool normalize) :
     _days(days), _hours(hours), _minutes(minutes), _seconds(seconds)
 {
+    _isNull = false;
+    _isNormalized = normalize;
     if (normalize)
         Normalize();
 }
@@ -22,6 +26,7 @@ DaysAndTime::DaysAndTime(long days, long hours, long minutes, long seconds, bool
 
 void DaysAndTime::Normalize()
 {
+    _isNormalized = true;
     if (_seconds > 59)
     {
         double minutes = (double)_seconds / 60.0;
@@ -57,6 +62,9 @@ long DaysAndTime::GetDays()
 void DaysAndTime::SetDays(long days)
 {
     _days = days;
+    _isNull = false;
+    if (_isNormalized)
+        Normalize();
 }
 
 long DaysAndTime::GetHours()
@@ -67,7 +75,9 @@ long DaysAndTime::GetHours()
 void DaysAndTime::SetHours(long hours)
 {
     _hours = hours;
-    Normalize();
+    _isNull = false;
+    if (_isNormalized)
+        Normalize();
 }
 
 long DaysAndTime::GetMinutes()
@@ -78,7 +88,9 @@ long DaysAndTime::GetMinutes()
 void DaysAndTime::SetMinutes(long minutes)
 {
     _minutes = minutes;
-    Normalize();
+    _isNull = false;
+    if (_isNormalized)
+        Normalize();
 }
 
 long DaysAndTime::GetSeconds()
@@ -89,7 +101,25 @@ long DaysAndTime::GetSeconds()
 void DaysAndTime::SetSeconds(long seconds)
 {
     _seconds = seconds;
-    Normalize();
+    _isNull = false;
+    if (_isNormalized)
+        Normalize();
+}
+
+void DaysAndTime::Reset()
+{
+    _days = _hours = _minutes = _seconds = 0;
+    _isNull = true;
+}
+
+bool DaysAndTime::IsNull()
+{
+    return _isNull;
+}
+
+bool DaysAndTime::IsNormalized()
+{
+    return _isNormalized;
 }
 
 #pragma endregion Public Getters and Setters

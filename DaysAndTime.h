@@ -19,11 +19,16 @@ namespace ArduinoGetPCDateTimeUtils
         long GetSeconds();
         void SetSeconds(long seconds);
         void Normalize();
+        void Reset();
+        bool IsNull();
+        bool IsNormalized();
     private:
         long _days;
         long _hours;
         long _minutes;
         long _seconds;
+        bool _isNull;
+        bool _isNormalized;
     };
 }
 
