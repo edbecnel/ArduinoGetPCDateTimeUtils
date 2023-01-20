@@ -10,6 +10,9 @@ const char compile_time[] = __TIME__;
 
 using namespace ArduinoGetPCDateTimeUtils;
 
+DateAndTime::GetCurrentDateAndTimeHanlderFunc DateAndTime::currentDateAndTimeHandler = NULL;
+
+
 #pragma region ConvertTimeLocalHelperFunctions
 void convertDateAndTimeToTime_t(const DateAndTime& dateAndTime, time_t& timeT)
 {
@@ -39,16 +42,19 @@ void convertTime_tToDateAndTime(const time_t dateAndTimeT, DateAndTime& dateAndT
 #pragma region DateAndTime
 DateAndTime::DateAndTime() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0)
 {
+    currentDateAndTimeHandler = NULL;
 }
 
 DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal) :
     month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), seconds(secondsVal)
 {
+    currentDateAndTimeHandler = NULL;
 }
 
 DateAndTime::DateAndTime(const DateAndTime& dateAndTime) :
     month(dateAndTime.month), day(dateAndTime.day), year(dateAndTime.year), hours(dateAndTime.hours), minutes(dateAndTime.minutes), seconds(dateAndTime.seconds)
 {
+    currentDateAndTimeHandler = NULL;
 }
 
 long DateAndTime::secondsTo(DateAndTime& otherDateTime)
@@ -151,6 +157,20 @@ void DateAndTime::addTime(int years, int months, int days, int hours, int minute
     addMinutes(minutes);
     addSeconds(seconds);
 }
+
+DateAndTime* DateAndTime::getCurrentDateAndTime()
+{
+    if (currentDateAndTimeHandler == NULL)
+        return NULL;
+    return currentDateAndTimeHandler();
+}
+
+void DateAndTime::setGetCurrentDateAndTimeFunction(DateAndTime*(*func)())
+{
+    currentDateAndTimeHandler = func;
+}
+
+
 #pragma endregion DateAndTime
 
 #pragma region DateAndTimeBytes
@@ -270,5 +290,16 @@ void DateAndTimeBytes::convertDateAndTimeToBytes(const DateAndTime& dateAndTime)
     hours = (byte)dateAndTime.hours;
     minutes = (byte)dateAndTime.minutes;
     seconds = (byte)dateAndTime.seconds;
+}
+
+DateAndTimeBytes* DateAndTimeBytes::getCurrentDateAndTime()
+{
+    DateAndTime* currentDateAndTime = DateAndTime::getCurrentDateAndTime();
+    if (currentDateAndTime != NULL)
+    {
+        DateAndTimeBytes* currentDateAnndTimeBytes = new DateAndTimeBytes(*currentDateAndTime);
+        return currentDateAnndTimeBytes;
+    }
+    return NULL;
 }
 #pragma endregion DateAndTimeBytes

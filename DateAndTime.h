@@ -1,6 +1,8 @@
 #ifndef _DateAndTime_
 #define _DateAndTime_ 1
 
+#include <stdio.h>
+
 typedef unsigned char byte;
 
 namespace ArduinoGetPCDateTimeUtils
@@ -27,6 +29,11 @@ namespace ArduinoGetPCDateTimeUtils
         int hours;
         int minutes;
         int seconds;
+        static DateAndTime* getCurrentDateAndTime();
+        static void setGetCurrentDateAndTimeFunction(DateAndTime*(*func)());
+        typedef DateAndTime* (*GetCurrentDateAndTimeHanlderFunc)();
+    private:
+        static GetCurrentDateAndTimeHanlderFunc currentDateAndTimeHandler;
     };
 
     class DateAndTimeBytes
@@ -53,6 +60,7 @@ namespace ArduinoGetPCDateTimeUtils
         byte hours;
         byte minutes;
         byte seconds;
+        static DateAndTimeBytes* getCurrentDateAndTime();
     };
 }
 #endif  // _DateAndTime
