@@ -79,6 +79,19 @@ void DateAndTime::getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, long&
     minutes = minutes % 60;
 }
 
+void DateAndTime::getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, DaysAndTime& daysAndTime)
+{
+    long days = daysAndTime.GetDays();
+    long hours = daysAndTime.GetHours();
+    long minutes = daysAndTime.GetMinutes();
+    long seconds = daysAndTime.GetSeconds();
+    getDaysHoursMinutesSecondsTo(otherDateTime, days, hours, minutes, seconds);
+    daysAndTime.SetDays(days);
+    daysAndTime.SetHours(hours);
+    daysAndTime.SetMinutes(minutes);
+    daysAndTime.SetSeconds(seconds);
+}
+
 bool DateAndTime::getCompileDateAndTime()
 {
     char monthChar[4] = "";
@@ -204,6 +217,15 @@ void DateAndTimeBytes::getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateT
     DateAndTime otherDateTime;
     otherDateTimeBytes.convertToDateAndTime(otherDateTime);
     dateAndTime.getDaysHoursMinutesSecondsTo(otherDateTime, days, hours, minutes, seconds);
+}
+
+void DateAndTimeBytes::getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, DaysAndTime& daysAndTime)
+{
+    DateAndTime dateAndTime;
+    convertToDateAndTime(dateAndTime);
+    DateAndTime otherDateTime;
+    otherDateTimeBytes.convertToDateAndTime(otherDateTime);
+    dateAndTime.getDaysHoursMinutesSecondsTo(otherDateTime, daysAndTime);
 }
 
 bool DateAndTimeBytes::getCompileDateAndTime()

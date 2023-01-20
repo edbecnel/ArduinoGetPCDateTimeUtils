@@ -2,6 +2,7 @@
 #define _DateAndTime_ 1
 
 #include <stdio.h>
+#include "DaysAndTime.h"
 
 typedef unsigned char byte;
 
@@ -15,6 +16,7 @@ namespace ArduinoGetPCDateTimeUtils
         DateAndTime(const DateAndTime& dateAndTime);
         long secondsTo(DateAndTime& otherDateTime);
         void getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, long& days, long& hours, long& minutes, long& seconds);
+        void getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, DaysAndTime& daysAndTime);
         bool getCompileDateAndTime();
         void addSeconds(int seconds);
         void addMinutes(int minutes);
@@ -44,6 +46,7 @@ namespace ArduinoGetPCDateTimeUtils
         DateAndTimeBytes(const DateAndTime&);
         long secondsTo(DateAndTimeBytes& otherDateTimeBytes);
         void getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, long& days, long& hours, long& minutes, long& seconds);
+        void getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTime, DaysAndTime& daysAndTime);
         bool getCompileDateAndTime();
         void addSeconds(byte seconds);
         void addMinutes(byte minutes);
