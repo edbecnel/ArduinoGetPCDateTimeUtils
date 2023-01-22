@@ -11,7 +11,8 @@ const char compile_time[] = __TIME__;
 using namespace ArduinoGetPCDateTimeUtils;
 
 DateAndTime::GetCurrentDateAndTimeHanlderFunc DateAndTime::currentDateAndTimeHandler = NULL;
-
+DateAndTime DateAndTime::Null = DateAndTime();
+DateAndTimeBytes DateAndTimeBytes::Null = DateAndTimeBytes();
 
 #pragma region ConvertTimeLocalHelperFunctions
 void convertDateAndTimeToTime_t(const DateAndTime& dateAndTime, time_t& timeT)
@@ -42,19 +43,38 @@ void convertTime_tToDateAndTime(const time_t dateAndTimeT, DateAndTime& dateAndT
 #pragma region DateAndTime
 DateAndTime::DateAndTime() : month(0), day(0), year(0), hours(0), minutes(0), seconds(0)
 {
-    currentDateAndTimeHandler = NULL;
 }
 
 DateAndTime::DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal) :
     month(monthVal), day(dayVal), year(yearVal), hours(hoursVal), minutes(minutesVal), seconds(secondsVal)
 {
-    currentDateAndTimeHandler = NULL;
 }
 
 DateAndTime::DateAndTime(const DateAndTime& dateAndTime) :
     month(dateAndTime.month), day(dateAndTime.day), year(dateAndTime.year), hours(dateAndTime.hours), minutes(dateAndTime.minutes), seconds(dateAndTime.seconds)
 {
-    currentDateAndTimeHandler = NULL;
+}
+
+DateAndTime::DateAndTime(DateAndTime* dateAndTimePtr)
+{
+    if (dateAndTimePtr == NULL)
+    {
+        month = day = year = hours = minutes = seconds = 0;
+        return;
+    }
+    month = dateAndTimePtr->month;
+    day = dateAndTimePtr->day;
+    year = dateAndTimePtr->year;
+    hours = dateAndTimePtr->hours;
+    minutes = dateAndTimePtr->minutes;
+    seconds = dateAndTimePtr->seconds;
+}
+
+bool DateAndTime::IsNull()
+{
+    if (month == 0 && day == 0 && year == 0 && hours == 0 && minutes == 0 && seconds == 0)
+        return true;
+    return false;
 }
 
 long DateAndTime::secondsTo(DateAndTime& otherDateTime)
@@ -64,7 +84,7 @@ long DateAndTime::secondsTo(DateAndTime& otherDateTime)
     time_t time2;
     convertDateAndTimeToTime_t(*this, time2);
     double dDiffInSeconds = difftime(time1, time2);
-    long lDiffInSeconds = floor(dDiffInSeconds);
+    long lDiffInSeconds = (long) floor(dDiffInSeconds);
     return lDiffInSeconds;
 }
 
@@ -171,14 +191,14 @@ void DateAndTime::addTime(int years, int months, int days, int hours, int minute
     addSeconds(seconds);
 }
 
-DateAndTime* DateAndTime::getCurrentDateAndTime()
+void DateAndTime::getCurrentDateAndTime(DateAndTime& dateAndTime)
 {
     if (currentDateAndTimeHandler == NULL)
-        return NULL;
-    return currentDateAndTimeHandler();
+        return;
+    currentDateAndTimeHandler(dateAndTime);
 }
 
-void DateAndTime::setGetCurrentDateAndTimeFunction(DateAndTime*(*func)())
+void DateAndTime::setGetCurrentDateAndTimeFunction(void (*func)(DateAndTime&))
 {
     currentDateAndTimeHandler = func;
 }
@@ -199,6 +219,13 @@ DateAndTimeBytes::DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byt
 DateAndTimeBytes::DateAndTimeBytes(const DateAndTime& dateAndTime) :
     month(dateAndTime.month), day(dateAndTime.day), year(dateAndTime.year), hours(dateAndTime.hours), minutes(dateAndTime.minutes), seconds(dateAndTime.seconds)
 {
+}
+
+bool DateAndTimeBytes::IsNull()
+{
+    if (month == 0 && day == 0 && year == 0 && hours == 0 && minutes == 0 && seconds == 0)
+        return true;
+    return false;
 }
 
 long DateAndTimeBytes::secondsTo(DateAndTimeBytes& otherDateTimeBytes)
@@ -314,14 +341,20 @@ void DateAndTimeBytes::convertDateAndTimeToBytes(const DateAndTime& dateAndTime)
     seconds = (byte)dateAndTime.seconds;
 }
 
-DateAndTimeBytes* DateAndTimeBytes::getCurrentDateAndTime()
+void DateAndTimeBytes::convertDateAndTimeToBytes(const DateAndTime& dateAndTime, DateAndTimeBytes& dateAndTimeBytes)
 {
-    DateAndTime* currentDateAndTime = DateAndTime::getCurrentDateAndTime();
-    if (currentDateAndTime != NULL)
-    {
-        DateAndTimeBytes* currentDateAnndTimeBytes = new DateAndTimeBytes(*currentDateAndTime);
-        return currentDateAnndTimeBytes;
-    }
-    return NULL;
+    dateAndTimeBytes.day = dateAndTime.day;
+    dateAndTimeBytes.month = dateAndTime.month;
+    dateAndTimeBytes.year = dateAndTime.year;
+    dateAndTimeBytes.hours = dateAndTime.hours;
+    dateAndTimeBytes.minutes = dateAndTime.minutes;
+    dateAndTimeBytes.seconds = dateAndTime.seconds;
+}
+
+void DateAndTimeBytes::getCurrentDateAndTime(DateAndTimeBytes& dateAndTimeBytes)
+{
+    DateAndTime dateAndTime;
+    DateAndTime::getCurrentDateAndTime(dateAndTime);
+    DateAndTimeBytes::convertDateAndTimeToBytes(dateAndTime, dateAndTimeBytes);
 }
 #pragma endregion DateAndTimeBytes

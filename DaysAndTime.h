@@ -8,8 +8,10 @@ namespace ArduinoGetPCDateTimeUtils
     class DaysAndTime
     {
     public:
+        static DaysAndTime Null;
         DaysAndTime();
         DaysAndTime(long days, long hours, long minutes, long seconds, bool normalize = false);
+        void Set(long days, long hours, long minutes, long seconds, bool normalize = false);
         long GetDays();
         void SetDays(long days);
         long GetHours();
@@ -18,10 +20,12 @@ namespace ArduinoGetPCDateTimeUtils
         void SetMinutes(long minutes);
         long GetSeconds();
         void SetSeconds(long seconds);
+        long GetTotalTimeInSeconds();
         void Normalize();
         void Reset();
         bool IsNull();
         bool IsNormalized();
+        bool IsEqualTo(DaysAndTime otherDayAndTime);
     private:
         long _days;
         long _hours;

@@ -11,9 +11,13 @@ namespace ArduinoGetPCDateTimeUtils
     class DateAndTime
     {
     public:
+        static DateAndTime Null;
+
         DateAndTime();
         DateAndTime(int monthVal, int dayVal, int yearVal, int hoursVal, int minutesVal, int secondsVal);
         DateAndTime(const DateAndTime& dateAndTime);
+        DateAndTime(DateAndTime* dateAndTimePtr);
+        bool IsNull();
         long secondsTo(DateAndTime& otherDateTime);
         void getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, long& days, long& hours, long& minutes, long& seconds);
         void getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, DaysAndTime& daysAndTime);
@@ -31,9 +35,9 @@ namespace ArduinoGetPCDateTimeUtils
         int hours;
         int minutes;
         int seconds;
-        static DateAndTime* getCurrentDateAndTime();
-        static void setGetCurrentDateAndTimeFunction(DateAndTime*(*func)());
-        typedef DateAndTime* (*GetCurrentDateAndTimeHanlderFunc)();
+        static void getCurrentDateAndTime(DateAndTime&);
+        static void setGetCurrentDateAndTimeFunction(void(*func)(DateAndTime&));
+        typedef void (*GetCurrentDateAndTimeHanlderFunc)(DateAndTime&);
     private:
         static GetCurrentDateAndTimeHanlderFunc currentDateAndTimeHandler;
     };
@@ -41,9 +45,12 @@ namespace ArduinoGetPCDateTimeUtils
     class DateAndTimeBytes
     {
     public:
+        static DateAndTimeBytes Null;
+
         DateAndTimeBytes();
         DateAndTimeBytes(byte monthVal, byte dayVal, byte yearVal, byte hoursVal, byte minutesVal, byte secondsVal);
         DateAndTimeBytes(const DateAndTime&);
+        bool IsNull();
         long secondsTo(DateAndTimeBytes& otherDateTimeBytes);
         void getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTimeBytes, long& days, long& hours, long& minutes, long& seconds);
         void getDaysHoursMinutesSecondsTo(DateAndTimeBytes& otherDateTime, DaysAndTime& daysAndTime);
@@ -63,7 +70,8 @@ namespace ArduinoGetPCDateTimeUtils
         byte hours;
         byte minutes;
         byte seconds;
-        static DateAndTimeBytes* getCurrentDateAndTime();
+        static void getCurrentDateAndTime(DateAndTimeBytes&);
+        static void convertDateAndTimeToBytes(const DateAndTime& dateAndTime, DateAndTimeBytes& dateAndTimeBytes);
     };
 }
 #endif  // _DateAndTime

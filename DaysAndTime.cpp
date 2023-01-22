@@ -3,6 +3,10 @@
 
 using namespace ArduinoGetPCDateTimeUtils;
 
+
+// Initialize static members
+DaysAndTime DaysAndTime::Null = DaysAndTime();
+
 #pragma region Constructors
 
 DaysAndTime::DaysAndTime() : _days(0), _hours(0), _minutes(0), _seconds(0)
@@ -22,7 +26,19 @@ DaysAndTime::DaysAndTime(long days, long hours, long minutes, long seconds, bool
 
 #pragma endregion Constructor
 
-#pragma region Private Methods
+#pragma region Public Methods
+
+void DaysAndTime::Set(long days, long hours, long minutes, long seconds, bool normalize)
+{
+    _isNull = false;
+    _days = days;
+    _hours = hours;
+    _minutes = minutes;
+    _seconds = seconds;
+    _isNormalized = normalize;
+    if (normalize)
+        Normalize();
+}
 
 void DaysAndTime::Normalize()
 {
@@ -50,7 +66,7 @@ void DaysAndTime::Normalize()
     }
 }
 
-#pragma endregion Private Methods
+#pragma endregion Public Methods
 
 #pragma region Public Getters and Setters
 
@@ -106,6 +122,19 @@ void DaysAndTime::SetSeconds(long seconds)
         Normalize();
 }
 
+long DaysAndTime::GetTotalTimeInSeconds()
+{
+    long totalSeconds = _seconds;
+    totalSeconds += _minutes * 60;
+    totalSeconds += _hours * 3600;
+    totalSeconds += _days * 86400;
+    return totalSeconds;
+}
+
+#pragma endregion Public Getters and Setters
+
+#pragma region Public Methods
+
 void DaysAndTime::Reset()
 {
     _days = _hours = _minutes = _seconds = 0;
@@ -122,4 +151,15 @@ bool DaysAndTime::IsNormalized()
     return _isNormalized;
 }
 
-#pragma endregion Public Getters and Setters
+bool DaysAndTime::IsEqualTo(DaysAndTime otherDayAndTime)
+{
+    if (otherDayAndTime.IsNull() && IsNull())
+        return true;    // Both are null
+    if (otherDayAndTime.IsNull() || IsNull())
+        return false;   // Only 1 of the 2 is null if we passed the first test for both null but fail this test
+    if (otherDayAndTime.GetTotalTimeInSeconds() != GetTotalTimeInSeconds())
+        return false;
+    return true;
+}
+
+#pragma endregion Public Methods
