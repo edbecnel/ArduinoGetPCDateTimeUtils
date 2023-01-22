@@ -97,7 +97,6 @@ namespace ArduinoAlarm
 			_triggerDateAndTime.addMinutes(diffTime.GetMinutes());
 			_triggerDateAndTime.addSeconds(diffTime.GetSeconds());
 			_triggerDateAndTime.addSeconds((long)-DelayInSeconds);
-
 		}
 		else if (temperatureThreshold.TimeType == TemperatureThresholdTimeType::TimeSpan)
 		{
