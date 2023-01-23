@@ -30,15 +30,23 @@ void convertDateAndTimeToTime_t(const DateAndTime& dateAndTime, time_t& timeT)
 
 void convertTime_tToDateAndTime(const time_t dateAndTimeT, DateAndTime& dateAndTime)
 {
-    struct tm newTime;
-    localtime_s(&newTime, &dateAndTimeT);
+    // This isn't available in the Arduino environment
+    //struct tm newTime;
+    //localtime_s(&newTime, &dateAndTimeT);
+    //dateAndTime.hours = newTime.tm_hour;
+    //dateAndTime.minutes = newTime.tm_min;
+    //dateAndTime.seconds = newTime.tm_sec;
+    //dateAndTime.month = newTime.tm_mon + 1;
+    //dateAndTime.day = newTime.tm_mday;
+    //dateAndTime.year = 1900 + newTime.tm_year;
 
-    dateAndTime.hours = newTime.tm_hour;
-    dateAndTime.minutes = newTime.tm_min;
-    dateAndTime.seconds = newTime.tm_sec;
-    dateAndTime.month = newTime.tm_mon + 1;
-    dateAndTime.day = newTime.tm_mday;
-    dateAndTime.year = 1900 + newTime.tm_year;
+    struct tm* newTimeTm = localtime(&dateAndTimeT);
+    dateAndTime.hours = newTimeTm->tm_hour;
+    dateAndTime.minutes = newTimeTm->tm_min;
+    dateAndTime.seconds = newTimeTm->tm_sec;
+    dateAndTime.month = newTimeTm->tm_mon + 1;
+    dateAndTime.day = newTimeTm->tm_mday;
+    dateAndTime.year = 1900 + newTimeTm->tm_year;
 }
 #pragma endregion ConvertTimeLocalHelperFunctions
 
@@ -117,22 +125,22 @@ void DateAndTime::getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, DaysA
 bool DateAndTime::getCompileDateAndTime()
 {
     char monthChar[4] = "";
-    strncpy_s(monthChar, compile_date, 3);
+    strncpy(monthChar, compile_date, 3);
     month = Utils::convertMonthToInt(monthChar);
     char dayChar[3] = "";
-    strncpy_s(dayChar, &compile_date[4], 2);
+    strncpy(dayChar, &compile_date[4], 2);
     day = Utils::convertCharToInt(dayChar, 2);
     char yearChar[5] = "";
-    strncpy_s(yearChar, &compile_date[7], 4);
+    strncpy(yearChar, &compile_date[7], 4);
     year = Utils::convertCharToInt(yearChar, 4);
     char hour[3] = "";
-    strncpy_s(hour, compile_time, 2);
+    strncpy(hour, compile_time, 2);
     hours = Utils::convertCharToInt(hour, 2);
     char min[3] = "";
-    strncpy_s(min, &compile_time[3], 2);
+    strncpy(min, &compile_time[3], 2);
     minutes = Utils::convertCharToInt(min, 2);
     char sec[3] = "";
-    strncpy_s(sec, &compile_time[6], 2);
+    strncpy(sec, &compile_time[6], 2);
     seconds = Utils::convertCharToInt(sec, 2);
     return true;
 }
