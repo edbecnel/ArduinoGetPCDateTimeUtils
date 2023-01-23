@@ -165,6 +165,7 @@ void loop()
         Serial.println("Temperature Threshold Crossed - Set New Trigger for Alarm 1");
         alarms[1].SetNewTrigger(temperature);
     }
+    // TODO: *** Remove this when using a real clock and temperature sensor
     delay(loopTimeDelaySeconds * 1000);  // Needed to mock up time since GetCurrentDateAndTime simple ticks up 1 second on each loop (delay is in milliseconds)
     currentTime.addSeconds(1); 
 }
