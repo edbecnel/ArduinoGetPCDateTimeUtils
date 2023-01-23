@@ -47,23 +47,50 @@ void DaysAndTime::Normalize()
     {
         double minutes = (double)_seconds / 60.0;
         _minutes += (long)floor(minutes);
-        double seconds = round(remainder(minutes, floor(minutes)) * 60.0);
+        double seconds = round(_remainder(minutes, floor(minutes)) * 60.0);
         _seconds = (long)seconds;
     }
     if (_minutes > 59)
     {
         double hours = (double)_minutes / 60.0;
         _hours += (long)floor(hours);
-        double minutes = round(remainder(hours, floor(hours)) * 60.0);
+        double minutes = round(_remainder(hours, floor(hours)) * 60.0);
         _minutes = (long)minutes;
     }
     if (_hours > 23)
     {
         double days = (double)_hours / 24.0;
         _days += (long)floor(days);
-        double hours = round(remainder(days, floor(days)) * 24.0);
+        double hours = round(_remainder(days, floor(days)) * 24.0);
         _hours = (long)hours;
     }
+}
+
+void DaysAndTime::Reset()
+{
+    _days = _hours = _minutes = _seconds = 0;
+    _isNull = true;
+}
+
+bool DaysAndTime::IsNull()
+{
+    return _isNull;
+}
+
+bool DaysAndTime::IsNormalized()
+{
+    return _isNormalized;
+}
+
+bool DaysAndTime::IsEqualTo(DaysAndTime otherDayAndTime)
+{
+    if (otherDayAndTime.IsNull() && IsNull())
+        return true;    // Both are null
+    if (otherDayAndTime.IsNull() || IsNull())
+        return false;   // Only 1 of the 2 is null if we passed the first test for both null but fail this test
+    if (otherDayAndTime.GetTotalTimeInSeconds() != GetTotalTimeInSeconds())
+        return false;
+    return true;
 }
 
 #pragma endregion Public Methods
@@ -133,33 +160,12 @@ long DaysAndTime::GetTotalTimeInSeconds()
 
 #pragma endregion Public Getters and Setters
 
-#pragma region Public Methods
+#pragma region Private Methods
 
-void DaysAndTime::Reset()
+double DaysAndTime::_remainder(double _x, double _y)
 {
-    _days = _hours = _minutes = _seconds = 0;
-    _isNull = true;
+    double remainder = fmod(_x, _y);
+    return remainder;
 }
 
-bool DaysAndTime::IsNull()
-{
-    return _isNull;
-}
-
-bool DaysAndTime::IsNormalized()
-{
-    return _isNormalized;
-}
-
-bool DaysAndTime::IsEqualTo(DaysAndTime otherDayAndTime)
-{
-    if (otherDayAndTime.IsNull() && IsNull())
-        return true;    // Both are null
-    if (otherDayAndTime.IsNull() || IsNull())
-        return false;   // Only 1 of the 2 is null if we passed the first test for both null but fail this test
-    if (otherDayAndTime.GetTotalTimeInSeconds() != GetTotalTimeInSeconds())
-        return false;
-    return true;
-}
-
-#pragma endregion Public Methods
+#pragma endregion Private Methods

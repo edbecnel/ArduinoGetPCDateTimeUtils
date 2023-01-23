@@ -27,6 +27,7 @@ namespace ArduinoGetPCDateTimeUtils
         bool IsNormalized();
         bool IsEqualTo(DaysAndTime otherDayAndTime);
     private:
+        double _remainder(double _x, double _y);
         long _days;
         long _hours;
         long _minutes;
