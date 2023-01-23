@@ -54,7 +54,7 @@ namespace ArduinoAlarm
     {
         None = 0,
         TemperatureThreshold = 1,
-        Debug = 2
+        Frequency = 2
     };
 
     class Alarm

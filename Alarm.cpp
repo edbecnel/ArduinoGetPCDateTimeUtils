@@ -36,8 +36,8 @@ namespace ArduinoAlarm
 	{
 		if (startDateAndTime.IsNull())
 			DateAndTime::getCurrentDateAndTime(startDateAndTime);
-		// Debug Alarm only supports Frequency Alarm intervals (not time of day)
-		if (_type == AlarmType::Debug)
+		// Frequency Alarm only supports Frequency Alarm intervals (not time of day)
+		if (_type == AlarmType::Frequency)
 		{
 			_triggerDateAndTime = startDateAndTime;
 			_triggerDateAndTime.addDays(_frequency.GetDays());
@@ -100,7 +100,7 @@ namespace ArduinoAlarm
 			_triggerDateAndTime.addHours(_frequency.GetHours());
 			_triggerDateAndTime.addMinutes(_frequency.GetMinutes());
 			_triggerDateAndTime.addSeconds(_frequency.GetSeconds());
-			if (_type != AlarmType::Debug)
+			if (_type != AlarmType::Frequency)
 				_triggerDateAndTime.addSeconds(-DelayInSeconds);
 		}
 	}
