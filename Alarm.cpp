@@ -16,20 +16,15 @@ namespace ArduinoAlarm
 
 	Alarm::Alarm(AlarmType type) : _type(type), _frequency(DaysAndTime::Null), _active(false), _activeThresholdIndex(-1)
 	{
+		_temperatureThresholds = new TemperatureThreshold[0];
+		_temperatureThresholdsCount = 0;
 	}
 
-	Alarm::Alarm(AlarmType type, vector<TemperatureThreshold> thresholds) : _type(type), _temperatureThresholds(thresholds),
-		_frequency(DaysAndTime::Null), _active(false), _activeThresholdIndex(-1)
+	Alarm::Alarm(AlarmType type, DaysAndTime frequency) : _type(type), _frequency(frequency), _active(false), 
+		_activeThresholdIndex(-1)
 	{
-	}
-
-	Alarm::Alarm(AlarmType type, vector<TemperatureThreshold> thresholds, DaysAndTime frequency) : _type(type),
-		_temperatureThresholds(thresholds), _frequency(frequency), _active(false), _activeThresholdIndex(-1)
-	{
-	}
-
-	Alarm::Alarm(AlarmType type, DaysAndTime frequency) : _type(type), _frequency(frequency), _active(false), _activeThresholdIndex(-1)
-	{
+		_temperatureThresholds = new TemperatureThreshold[0];
+		_temperatureThresholdsCount = 0;
 	}
 
 	void Alarm::SetNewTrigger(DateAndTime startDateAndTime)
@@ -166,24 +161,33 @@ namespace ArduinoAlarm
 		_type = type;
 	}
 
-	void Alarm::SetTemperatureThresholds(vector<TemperatureThreshold> thresholds)
-	{
-		_temperatureThresholds = thresholds;
-	}
-
 	void Alarm::AddTemperatureThreshold(TemperatureThreshold threshold)
 	{
-		_temperatureThresholds.push_back(threshold);
+		// _temperatureThresholds.push_back(threshold);
+		int oldCount = _temperatureThresholdsCount;
+		TemperatureThreshold* newThresholds = new TemperatureThreshold[++_temperatureThresholdsCount];
+		if (oldCount > 0)
+		{
+			for (int i = 0; i < oldCount; i++)
+			{
+				newThresholds[i] = _temperatureThresholds[i];
+			}
+		}
+		delete[] _temperatureThresholds;
+		newThresholds[_temperatureThresholdsCount - 1] = threshold;
+		_temperatureThresholds = newThresholds;
 	}
 
-	vector<TemperatureThreshold> Alarm::GetTemperatureThresholds()
+	TemperatureThreshold* Alarm::GetTemperatureThresholds(int& count)
 	{
+		count = _temperatureThresholdsCount;
 		return _temperatureThresholds;
 	}
 
 	TemperatureThreshold Alarm::GetTemperatureThresholdAt(int index)
 	{
-		if (index < 0 || index > (int)_temperatureThresholds.size() - 1)
+		//if (index < 0 || index > (int)_temperatureThresholds.size() - 1)
+		if (index < 0 || index >(int)_temperatureThresholdsCount - 1)
 			return TemperatureThreshold::Null;
 		return _temperatureThresholds[index];
 	}
@@ -196,7 +200,9 @@ namespace ArduinoAlarm
 		int lowestThresholdIndex = -1;
 		int highestThresholdTemperature = -999;
 		int highestThresholdIndex = -1;
-		for (int index = 0; index < (int)_temperatureThresholds.size(); index++)
+		//for (int index = 0; index < (int)_temperatureThresholds.size(); index++)
+		for (int index = 0; index < _temperatureThresholdsCount; index++)
+
 		{
 			TemperatureThreshold threshold(_temperatureThresholds[index]);
 			switch (threshold.Type)

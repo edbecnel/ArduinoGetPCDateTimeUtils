@@ -3,7 +3,7 @@
 
 #include "DateAndTime.h"
 #include "DaysAndTime.h"
-#include <vector>
+
 
 using namespace ArduinoGetPCDateTimeUtils;
 using namespace std;
@@ -65,8 +65,6 @@ namespace ArduinoAlarm
         static int DebugFrequencyInSeconds;
 
         Alarm(AlarmType type = AlarmType::None);
-        Alarm(AlarmType type, vector<TemperatureThreshold> thresholds);
-        Alarm(AlarmType type, vector<TemperatureThreshold> thresholds, DaysAndTime frequency);
         Alarm(AlarmType type, DaysAndTime frequency);
 
         void SetNewTrigger(DateAndTime startDateAndTime = DateAndTime::Null);
@@ -83,9 +81,8 @@ namespace ArduinoAlarm
         AlarmType GetType();
         void SetType(AlarmType type);
 
-        void SetTemperatureThresholds(vector<TemperatureThreshold> thresholds);
         void AddTemperatureThreshold(TemperatureThreshold threshold);
-        vector<TemperatureThreshold> GetTemperatureThresholds();
+        TemperatureThreshold* GetTemperatureThresholds(int& count);
         TemperatureThreshold GetTemperatureThresholdAt(int index);
 
         int GetThresholdIndexForTemperature(int temperature);
@@ -102,9 +99,9 @@ namespace ArduinoAlarm
         DaysAndTime _frequency;
         DateAndTime _triggerDateAndTime;
         AlarmType _type;
-        vector<TemperatureThreshold> _temperatureThresholds;
+        TemperatureThreshold* _temperatureThresholds;
+        int _temperatureThresholdsCount;
         int _activeThresholdIndex;
-        DateAndTime getDateAndTime(DateAndTime* dateAndTimePtr, bool getCurrentIfNull = true);
     };
 }
 
