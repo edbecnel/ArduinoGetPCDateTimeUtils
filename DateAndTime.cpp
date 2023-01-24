@@ -155,17 +155,20 @@ void DateAndTime::addSeconds(long secondsToAdd)
 
 void DateAndTime::addMinutes(long minutesToAdd)
 {
-    addSeconds(60l * minutesToAdd);
+    long secondsPerMinute = 60;
+    addSeconds(secondsPerMinute * minutesToAdd);
 }
 
 void DateAndTime::addHours(long hoursToAdd)
 {
-    addMinutes(60l * hoursToAdd);
+    long minutesPerHour = 60;
+    addMinutes(minutesPerHour * hoursToAdd);
 }
 
 void DateAndTime::addDays(long daysToAdd)
 {
-    addHours(24l * daysToAdd);
+    long hoursPerDay = 24;
+    addHours(hoursPerDay * daysToAdd);
 }
 
 void DateAndTime::addMonths(long monthsToAdd)
