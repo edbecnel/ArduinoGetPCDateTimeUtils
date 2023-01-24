@@ -102,6 +102,7 @@ namespace ArduinoAlarm
         TemperatureThreshold* _temperatureThresholds;
         int _temperatureThresholdsCount;
         int _activeThresholdIndex;
+        bool _thresholdTimeOfDayTriggerEnabled;
     };
 }
 

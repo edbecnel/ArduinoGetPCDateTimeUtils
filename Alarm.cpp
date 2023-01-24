@@ -14,14 +14,15 @@ namespace ArduinoAlarm
 
 	TemperatureThreshold TemperatureThreshold::Null = TemperatureThreshold();
 
-	Alarm::Alarm(AlarmType type) : _type(type), _frequency(DaysAndTime::Null), _active(false), _activeThresholdIndex(-1)
+	Alarm::Alarm(AlarmType type) : _type(type), _frequency(DaysAndTime::Null), _active(false), _activeThresholdIndex(-1),
+		_thresholdTimeOfDayTriggerEnabled(true)
 	{
 		_temperatureThresholds = new TemperatureThreshold[0];
 		_temperatureThresholdsCount = 0;
 	}
 
 	Alarm::Alarm(AlarmType type, DaysAndTime frequency) : _type(type), _frequency(frequency), _active(false), 
-		_activeThresholdIndex(-1)
+		_activeThresholdIndex(-1), _thresholdTimeOfDayTriggerEnabled(true)
 	{
 		_temperatureThresholds = new TemperatureThreshold[0];
 		_temperatureThresholdsCount = 0;
@@ -54,8 +55,18 @@ namespace ArduinoAlarm
 				TemperatureThreshold threshold = GetTemperatureThresholdAt(thresholdIndex);
 				if (!threshold.IsNull())
 				{
-					_activeThresholdIndex = thresholdIndex;
-					SetNewTrigger(threshold, startDateAndTime);
+					if (_activeThresholdIndex == thresholdIndex &&
+						threshold.TimeType == TemperatureThresholdTimeType::TimeOfDay)
+					{
+						// Don't set a new trigger for TimeOfDay thresholds if the threshold hasn't changed
+						_thresholdTimeOfDayTriggerEnabled = false;
+					}
+					else
+					{
+						_activeThresholdIndex = thresholdIndex;
+						_thresholdTimeOfDayTriggerEnabled = true;
+						SetNewTrigger(threshold, startDateAndTime);
+					}
 				}
 			}
 		}
@@ -77,29 +88,31 @@ namespace ArduinoAlarm
 			// If the time difference is <= 0 , then we need to advance the day by 1 and get a new diffTime that is positive
 			if (diffTime.GetTotalTimeInSeconds() <= 0)
 			{
-				triggerDateAndTime.month = startDateAndTime.month;
-				triggerDateAndTime.day = startDateAndTime.day;
-				triggerDateAndTime.year = startDateAndTime.year;
-				triggerDateAndTime.hours = (int)temperatureThreshold.Frequency.GetHours();
-				triggerDateAndTime.minutes = (int)temperatureThreshold.Frequency.GetMinutes();
-				triggerDateAndTime.seconds = (int)temperatureThreshold.Frequency.GetSeconds();
-				triggerDateAndTime.addDays(1);
-				startDateAndTime.getDaysHoursMinutesSecondsTo(triggerDateAndTime, diffTime);
+				_triggerDateAndTime.month = startDateAndTime.month;
+				_triggerDateAndTime.day = startDateAndTime.day;
+				_triggerDateAndTime.year = startDateAndTime.year;
+				_triggerDateAndTime.hours = (int)temperatureThreshold.Frequency.GetHours();
+				_triggerDateAndTime.minutes = (int)temperatureThreshold.Frequency.GetMinutes();
+				_triggerDateAndTime.seconds = (int)temperatureThreshold.Frequency.GetSeconds();
+				_triggerDateAndTime.addDays(1);
+				}
+			else
+			{
+				_triggerDateAndTime = startDateAndTime;
+				_triggerDateAndTime.addDays(diffTime.GetDays());
+				_triggerDateAndTime.addHours(diffTime.GetHours());
+				_triggerDateAndTime.addMinutes(diffTime.GetMinutes());
+				_triggerDateAndTime.addSeconds(diffTime.GetSeconds());
 			}
-			_triggerDateAndTime = startDateAndTime;
-			_triggerDateAndTime.addDays(diffTime.GetDays());
-			_triggerDateAndTime.addHours(diffTime.GetHours());
-			_triggerDateAndTime.addMinutes(diffTime.GetMinutes());
-			_triggerDateAndTime.addSeconds(diffTime.GetSeconds());
 			_triggerDateAndTime.addSeconds((long)-DelayInSeconds);
 		}
 		else if (temperatureThreshold.TimeType == TemperatureThresholdTimeType::TimeSpan)
 		{
 			_triggerDateAndTime = startDateAndTime;
-			_triggerDateAndTime.addDays(_frequency.GetDays());
-			_triggerDateAndTime.addHours(_frequency.GetHours());
-			_triggerDateAndTime.addMinutes(_frequency.GetMinutes());
-			_triggerDateAndTime.addSeconds(_frequency.GetSeconds());
+			_triggerDateAndTime.addDays(temperatureThreshold.Frequency.GetDays());
+			_triggerDateAndTime.addHours(temperatureThreshold.Frequency.GetHours());
+			_triggerDateAndTime.addMinutes(temperatureThreshold.Frequency.GetMinutes());
+			_triggerDateAndTime.addSeconds(temperatureThreshold.Frequency.GetSeconds());
 			if (_type != AlarmType::Frequency)
 				_triggerDateAndTime.addSeconds(-DelayInSeconds);
 		}
@@ -259,9 +272,12 @@ namespace ArduinoAlarm
 	{
 		if (!_active)
 			return false;
+		if (_type == AlarmType::TemperatureThreshold && !_thresholdTimeOfDayTriggerEnabled)
+			return false;
 		DateAndTime currentTime;
 		DateAndTime::getCurrentDateAndTime(currentTime);
-		if (currentTime.secondsTo(_triggerDateAndTime) <= 0)
+		int seconds = currentTime.secondsTo(_triggerDateAndTime);
+		if (seconds <= 0 )
 			return true;
 		return false;
 	}
