@@ -145,7 +145,7 @@ bool DateAndTime::getCompileDateAndTime()
     return true;
 }
 
-void DateAndTime::addSeconds(int secondsToAdd)
+void DateAndTime::addSeconds(long secondsToAdd)
 {
     time_t timeT = 0;
     convertDateAndTimeToTime_t(*this, timeT);
@@ -153,31 +153,31 @@ void DateAndTime::addSeconds(int secondsToAdd)
     convertTime_tToDateAndTime(newDateAndTime, *this);
 }
 
-void DateAndTime::addMinutes(int minutesToAdd)
+void DateAndTime::addMinutes(long minutesToAdd)
 {
-    addSeconds(60 * minutesToAdd);
+    addSeconds(60l * minutesToAdd);
 }
 
-void DateAndTime::addHours(int hoursToAdd)
+void DateAndTime::addHours(long hoursToAdd)
 {
-    addMinutes(60 * hoursToAdd);
+    addMinutes(60l * hoursToAdd);
 }
 
-void DateAndTime::addDays(int daysToAdd)
+void DateAndTime::addDays(long daysToAdd)
 {
-    addHours(24 * daysToAdd);
+    addHours(24l * daysToAdd);
 }
 
-void DateAndTime::addMonths(int monthsToAdd)
+void DateAndTime::addMonths(long monthsToAdd)
 {
     double yearsDouble = monthsToAdd / 12.0;
-    int yearsInt = (int)floor(yearsDouble);
+    long yearsInt = (long)floor(yearsDouble);
     if (yearsInt > 0)
     {
         addYears(yearsInt);
         double monthsDouble = yearsDouble - (double)yearsInt;
         monthsDouble = monthsDouble * 12.0;
-        monthsToAdd = (int)monthsDouble;
+        monthsToAdd = (long)monthsDouble;
     }
     month += monthsToAdd;
     if (month > 12)
@@ -186,12 +186,12 @@ void DateAndTime::addMonths(int monthsToAdd)
     }
 }
 
-void DateAndTime::addYears(int yearsToAdd)
+void DateAndTime::addYears(long yearsToAdd)
 {
     year += yearsToAdd;
 }
 
-void DateAndTime::addTime(int years, int months, int days, int hours, int minutes, int seconds)
+void DateAndTime::addTime(long years, long months, long days, long hours, long minutes, long seconds)
 {
     addYears(years);
     addMonths(months);
