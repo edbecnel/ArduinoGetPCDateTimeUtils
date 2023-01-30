@@ -17,29 +17,38 @@ void PrintUtils::print(const char* msg, bool newLine)
 {
     if (msg == NULL)
         return;
-    // TODO: 
     // Use printf when running in Visual Studio
     // Use Serial.print when running in Arduino environment
-    // printf(msg);
-    Serial.print(msg);
+    #ifdef Arduino_h
+        Serial.print(msg);
+    #else
+        printf(msg);
+    #endif
     if (newLine)
-        // printf("\n");
+    #ifdef Arduino_h
         Serial.println();
+    #else
+        printf("\n");
+    #endif
 }
 
 void PrintUtils::print(char* msg, bool newLine)
 {
     if (msg == NULL)
         return;
-    // TODO: 
     // Use printf when running in Visual Studio
     // Use Serial.print when running in Arduino environment
-    // printf(msg);
-    // printf(msg);
-    Serial.print(msg);
+    #ifdef Arduino_h
+        Serial.print(msg);
+    #else
+        printf(msg);
+    #endif
     if (newLine)
-        // printf("\n");
+    #ifdef Arduino_h
         Serial.println();
+    #else
+        printf("\n");
+    #endif
 }
 
 void PrintUtils::printNewLine()
