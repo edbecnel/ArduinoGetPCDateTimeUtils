@@ -6,12 +6,14 @@
 #include "ArduinoGetPCDateTimeUtils.h"
 #include "DaysAndTime.h"
 #include "Alarm.h"
+#include "PrintUtils.h"
 
 DateAndTime startTime;
 DateAndTime currentTime;
 
 using namespace ArduinoGetPCDateTimeUtils;
 using namespace ArduinoAlarm;
+using namespace ArduinoPrintUtils;
 
 Alarm alarms[2];
 long seconds = 0;
@@ -19,174 +21,8 @@ int prevTemperature = -999;
 int currTemperature = 41;
 int loopTimeDelaySeconds = 1;  // In seconds
 
-void print(const char* msg, bool newLine = false);
-void print(int number, bool newLine = false);
-void print(long number, bool newLine=false);
-void print(int number, const char* format, bool newLine = false);
-void print2digits(int number, bool newLine = false);
-void printTime(int hours, int minutes, int seconds, bool newLine = false);
-void printDate(int month, int day, int year, bool newLine = false);
-void printDaysAndTime(DaysAndTime daysAndTime, bool newLine = false);
-void printDateAndTime(DateAndTime dateAndTime, bool newLine = false);
-void printTimeSpan(DaysAndTime frequency, bool newLine = false);
-void printTimeOfDay(DaysAndTime timeOfDay, bool newLine = false);
-void printAlarmTriggerDateAndTime(Alarm alarm, bool newLine = false);
-void printTimeType(TemperatureThresholdTimeType timeType, bool newLine = false);
-void printTriggerAndThreshold(Alarm alarm, TemperatureThreshold threshold, bool newLine = false);
 int GetCurrentTemperature(bool displayOnChange = false);
 
-
-void print(const char* msg, bool newLine)
-{
-    if (msg == NULL)
-        return;
-    Serial.print(msg);
-    if (newLine)
-        Serial.println("");
-}
-
-void printNewLine()
-{
-    print("", true);
-}
-
-void print(int number, const char* format, bool newLine)
-{
-    char buffer[50];
-    if (format == NULL)
-        sprintf(buffer, "%d", number);
-    else
-        sprintf(buffer, format, number);
-    print(buffer, newLine);
-}
-
-void print(long number, const char* format, bool newLine)
-{
-    char buffer[50];
-    if (format == NULL)
-        sprintf(buffer, "%ld", number);
-    else
-        sprintf(buffer, format, number);
-    print(buffer, newLine);
-}
-
-void print(int number, bool newLine)
-{
-    print(number, NULL, newLine);
-}
-
-void print(long number, bool newLine)
-{
-    print(number, NULL, newLine);
-}
-
-void print2digits(int number, bool newLine)
-{
-    print(number, "%02d", newLine);
-}
-
-void printTime(int hours, int minutes, int seconds, bool newLine)
-{
-    print2digits(hours);
-    print(":");
-    print2digits(minutes);
-    print(":");
-    print2digits(seconds, newLine);
-}
-
-void printDate(int month, int day, int year, bool newLine)
-{
-    print2digits(month);
-    print("/");
-    print2digits(day);
-    print("/");
-    print(year, newLine);
-}
-
-void printAlarmTriggerDateAndTime(Alarm alarm, bool newLine)
-{
-    print("Alarm Has Been Set for [mon/day/yr hr:min:sec]: ");
-    DateAndTime dateAndTime = alarm.GetTriggerDateAndTime();
-    // Print date...
-    printDate(dateAndTime.month, dateAndTime.day, dateAndTime.year);
-    print("  ");
-    // ...and time
-    printTime(dateAndTime.hours, dateAndTime.minutes, dateAndTime.seconds, true);
-}
-
-void printTimeType(TemperatureThresholdTimeType timeType, bool newLine)
-{
-    switch (timeType)
-    {
-    case TemperatureThresholdTimeType::TimeOfDay:
-        print("TimeOfDay", newLine);
-        break;
-    case TemperatureThresholdTimeType::TimeSpan:
-        print("TimeSpan", newLine);
-        break;
-    case TemperatureThresholdTimeType::None:
-        print("None", newLine);
-        break;
-    }
-}
-
-void printDaysAndTime(DaysAndTime daysAndTime, bool newLine)
-{
-    print(daysAndTime.GetDays());
-    print(" ");
-    print2digits(daysAndTime.GetHours());
-    print(":");
-    print2digits(daysAndTime.GetMinutes());
-    print(":");
-    print2digits(daysAndTime.GetSeconds());
-    if (newLine);
-    printNewLine();
-}
-
-void printDateAndTime(DateAndTime dateAndTime, bool newLine)
-{
-    print2digits(dateAndTime.month);
-    print("/");
-    print2digits(dateAndTime.day);
-    print("/");
-    print(dateAndTime.year);
-    print(" ");
-    print2digits(dateAndTime.hours);
-    print(":");
-    print2digits(dateAndTime.minutes);
-    print(":");
-    print2digits(dateAndTime.seconds, newLine);
-}
-
-void printTimeSpan(DaysAndTime frequency, bool newLine)
-{
-    print("TimeSpan: [Days Hours:Minute:Seconds] = ");
-    printDaysAndTime(frequency, newLine);
-}
-
-void printTimeOfDay(DaysAndTime timeOfDay, bool newLine)
-{
-    print("TimeOfDay: [Day Hour:Minute:Second] = ");
-    printDaysAndTime(timeOfDay, newLine);
-}
-
-void printTriggerAndThreshold(Alarm alarm, TemperatureThreshold threshold, bool newLine)
-{
-    printAlarmTriggerDateAndTime(alarm);
-    print(" ");
-    switch (threshold.TimeType)
-    {
-    case TemperatureThresholdTimeType::TimeOfDay:
-        printTimeOfDay(threshold.Frequency, newLine);
-        break;
-    case TemperatureThresholdTimeType::TimeSpan:
-        printTimeSpan(threshold.Frequency, newLine);
-        break;
-    default:
-        printTimeType(threshold.TimeType, newLine);
-        break;
-    }
-}
 
 // TODO: Replace the implementation of this function to get the temperature from the temperature sensor
 int GetCurrentTemperature(bool displayOnChange)
@@ -220,15 +56,15 @@ int GetCurrentTemperature(bool displayOnChange)
         if (displayOnChange)
         {
             seconds = elapsedSeconds;
-            print("Temperature = ");
-            print(currTemperature);
-            print(" Time = ");
-            print2digits(currTime.hours);
-            print(":");
-            print2digits(currTime.minutes);
-            print(":");
-            print2digits(currTime.seconds);
-            printNewLine();
+            PrintUtils::print("Temperature = ");
+            PrintUtils::print(currTemperature);
+            PrintUtils::print(" Time = ");
+            PrintUtils::print2digits(currTime.hours);
+            PrintUtils::print(":");
+            PrintUtils::print2digits(currTime.minutes);
+            PrintUtils::print(":");
+            PrintUtils::print2digits(currTime.seconds);
+            PrintUtils::printNewLine();
         }
 
         prevTemperature = currTemperature;
@@ -260,8 +96,8 @@ void setup()
 
     // TODO: *** Remove the following code after properly implementing GetCurrentDateAndTime() to get the date and time from the RTCZero board
     currentTime = DateAndTime(1, 24, 2023, 14, 20, 0);
-    print("Starting date/time: ");
-    printDateAndTime(currentTime, true);
+    PrintUtils::print("Starting date/time: ");
+    PrintUtils::printDateAndTime(currentTime, true);
 
     DateAndTime::getCurrentDateAndTime(startTime);
     currentTime = startTime;
@@ -314,29 +150,29 @@ void setup()
     int temperature = GetCurrentTemperature();
     alarms[1].Start(temperature);
 
-    print("alarms[1] Threshold - ");
-    printTriggerAndThreshold(alarms[1], alarms[1].GetThresholdForTemperature(GetCurrentTemperature()), true);
+    PrintUtils::print("alarms[1] Threshold - ");
+    PrintUtils::printTriggerAndThreshold(alarms[1], alarms[1].GetThresholdForTemperature(GetCurrentTemperature()), true);
 }
 
 void loop() 
 {
     if (alarms[0].IsTriggered())
     {
-        print("Frequency Alarm 0 triggered", true);
+        PrintUtils::print("Frequency Alarm 0 triggered", true);
         alarms[0].SetNewTrigger();
     }
     int temperature = GetCurrentTemperature(true);
     if (alarms[1].IsTriggered())
     {
-        print("Temperature Threshold Alarm 1 triggered", true);
+        PrintUtils::print("Temperature Threshold Alarm 1 triggered", true);
         alarms[1].SetNewTrigger(temperature);
     }
     if (alarms[1].TemperatureThresholdCrossed(temperature))
     {
-        print("Temperature Threshold Crossed - Set New Trigger for Alarm 1", true);
+        PrintUtils::print("Temperature Threshold Crossed - Set New Trigger for Alarm 1", true);
         alarms[1].SetNewTrigger(temperature);
         TemperatureThreshold newThreshold = alarms[1].GetThresholdForTemperature(temperature);
-        printTriggerAndThreshold(alarms[1], newThreshold, true);
+        PrintUtils::printTriggerAndThreshold(alarms[1], newThreshold, true);
     }
     // TODO: *** Remove this when using a real clock and temperature sensor
     delay(loopTimeDelaySeconds * 1000);  // Needed to mock up time since GetCurrentDateAndTime simple ticks up 1 second on each loop (delay is in milliseconds)
