@@ -15,9 +15,11 @@ void PrintUtils::print(const char* msg, bool newLine)
 {
     if (msg == NULL)
         return;
-    // TODO: Replace printf with Serial.print in Arduino environment
-    printf(msg);
-    // Serial.print(msg);
+    // TODO: 
+    // Use printf when running in Visual Studio
+    // Use Serial.print when running in Arduino environment
+    // printf(msg);
+    Serial.print(msg);
     if (newLine)
         printf("\n");
 }
