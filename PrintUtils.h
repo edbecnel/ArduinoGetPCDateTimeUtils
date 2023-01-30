@@ -1,8 +1,6 @@
 #ifndef _PrintUtils_
 #define _PrintUtils_ 1
 
-// TODO: Remove inclusion of Arduino.h when running outside of the Arduino environment/compiler
-#include "Arduino.h"
 #include "Alarm.h"
 #include "DaysAndTime.h"
 #include "DateAndTime.h"

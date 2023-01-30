@@ -1,3 +1,5 @@
+// TODO: Remove inclusion of Arduino.h when running outside of the Arduino environment/compiler
+#include "Arduino.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -21,7 +23,8 @@ void PrintUtils::print(const char* msg, bool newLine)
     // printf(msg);
     Serial.print(msg);
     if (newLine)
-        Serial.print("\n");
+        // printf("\n");
+        Serial.println();
 }
 
 void PrintUtils::print(char* msg, bool newLine)
@@ -35,7 +38,8 @@ void PrintUtils::print(char* msg, bool newLine)
     // printf(msg);
     Serial.print(msg);
     if (newLine)
-        Serial.print("\n");
+        // printf("\n");
+        Serial.println();
 }
 
 void PrintUtils::printNewLine()
