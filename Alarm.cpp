@@ -10,7 +10,7 @@ namespace ArduinoAlarm
 {
 	// Initialize static members
 	DaysAndTime Alarm::TempAbove40TimeOfDay = DaysAndTime(0, 12, 0, 0);
-	int Alarm::DelayInSeconds = 55;
+	int Alarm::DelayInSeconds = 0;
 
 	TemperatureThreshold TemperatureThreshold::Null = TemperatureThreshold();
 
