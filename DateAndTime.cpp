@@ -13,6 +13,11 @@ using namespace ArduinoGetPCDateTimeUtils;
 DateAndTime::GetCurrentDateAndTimeHanlderFunc DateAndTime::currentDateAndTimeHandler = NULL;
 DateAndTime DateAndTime::Null = DateAndTime();
 DateAndTimeBytes DateAndTimeBytes::Null = DateAndTimeBytes();
+char DateAndTime::compileDateOverride[] = "";
+char DateAndTime::compileTimeOverride[] = "";
+int DateAndTime::minDateCharLen = 10;
+int DateAndTime::minTimeCharLen = 7;
+
 
 #pragma region ConvertTimeLocalHelperFunctions
 void convertDateAndTimeToTime_t(const DateAndTime& dateAndTime, time_t& timeT)
@@ -122,26 +127,72 @@ void DateAndTime::getDaysHoursMinutesSecondsTo(DateAndTime& otherDateTime, DaysA
     daysAndTime.SetSeconds(seconds);
 }
 
+void DateAndTime::getCompileDateFromOverride()
+{
+    if (compileDateOverride != NULL && strlen(compileDateOverride) > minDateCharLen)
+    {
+        char monthChar[4] = "";
+        strncpy(monthChar, compileDateOverride, 3);
+        month = Utils::convertMonthToInt(monthChar);
+        char dayChar[3] = "";
+        strncpy(dayChar, &compileDateOverride[4], 2);
+        day = Utils::convertCharToInt(dayChar, 2);
+        char yearChar[5] = "";
+        strncpy(yearChar, &compileDateOverride[7], 4);
+        year = Utils::convertCharToInt(yearChar, 4);
+    }
+}
+
+void DateAndTime::getCompileTimeFromOverride()
+{
+    if (compileTimeOverride != NULL && strlen(compileTimeOverride) > minTimeCharLen)
+    {
+        char hour[3] = "";
+        strncpy(hour, compileTimeOverride, 2);
+        hours = Utils::convertCharToInt(hour, 2);
+        char min[3] = "";
+        strncpy(min, &compileTimeOverride[3], 2);
+        minutes = Utils::convertCharToInt(min, 2);
+        char sec[3] = "";
+        strncpy(sec, &compileTimeOverride[6], 2);
+        seconds = Utils::convertCharToInt(sec, 2);
+    }
+}
+
 bool DateAndTime::getCompileDateAndTime()
 {
-    char monthChar[4] = "";
-    strncpy(monthChar, compile_date, 3);
-    month = Utils::convertMonthToInt(monthChar);
-    char dayChar[3] = "";
-    strncpy(dayChar, &compile_date[4], 2);
-    day = Utils::convertCharToInt(dayChar, 2);
-    char yearChar[5] = "";
-    strncpy(yearChar, &compile_date[7], 4);
-    year = Utils::convertCharToInt(yearChar, 4);
-    char hour[3] = "";
-    strncpy(hour, compile_time, 2);
-    hours = Utils::convertCharToInt(hour, 2);
-    char min[3] = "";
-    strncpy(min, &compile_time[3], 2);
-    minutes = Utils::convertCharToInt(min, 2);
-    char sec[3] = "";
-    strncpy(sec, &compile_time[6], 2);
-    seconds = Utils::convertCharToInt(sec, 2);
+    if (compileDateOverride != NULL && strlen(compileDateOverride) > minDateCharLen)
+    {
+        getCompileDateFromOverride();
+    }
+    else
+    {
+        char monthChar[4] = "";
+        strncpy(monthChar, compile_date, 3);
+        month = Utils::convertMonthToInt(monthChar);
+        char dayChar[3] = "";
+        strncpy(dayChar, &compile_date[4], 2);
+        day = Utils::convertCharToInt(dayChar, 2);
+        char yearChar[5] = "";
+        strncpy(yearChar, &compile_date[7], 4);
+        year = Utils::convertCharToInt(yearChar, 4);
+    }
+    if (compileTimeOverride != NULL && strlen(compileTimeOverride) > minTimeCharLen)
+    {
+        getCompileTimeFromOverride();
+    }
+    else
+    {
+        char hour[3] = "";
+        strncpy(hour, compile_time, 2);
+        hours = Utils::convertCharToInt(hour, 2);
+        char min[3] = "";
+        strncpy(min, &compile_time[3], 2);
+        minutes = Utils::convertCharToInt(min, 2);
+        char sec[3] = "";
+        strncpy(sec, &compile_time[6], 2);
+        seconds = Utils::convertCharToInt(sec, 2);
+    }
     return true;
 }
 
@@ -216,6 +267,13 @@ void DateAndTime::setGetCurrentDateAndTimeFunction(void (*func)(DateAndTime&))
     currentDateAndTimeHandler = func;
 }
 
+void DateAndTime::setCompileDateAndTimeOverrides(const char* date, const char* time)
+{
+    if (date != NULL && strlen(date) > minDateCharLen)
+        strcpy(compileDateOverride, date);
+    if (time != NULL && strlen(time) > minTimeCharLen)
+        strcpy(compileTimeOverride, time);
+}
 
 #pragma endregion DateAndTime
 

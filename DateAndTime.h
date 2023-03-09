@@ -37,9 +37,16 @@ namespace ArduinoGetPCDateTimeUtils
         int seconds;
         static void getCurrentDateAndTime(DateAndTime&);
         static void setGetCurrentDateAndTimeFunction(void(*func)(DateAndTime&));
+        static void setCompileDateAndTimeOverrides(const char*, const char*);
         typedef void (*GetCurrentDateAndTimeHanlderFunc)(DateAndTime&);
     private:
+        void getCompileDateFromOverride();
+        void getCompileTimeFromOverride();
         static GetCurrentDateAndTimeHanlderFunc currentDateAndTimeHandler;
+        static char compileDateOverride[10];
+        static char compileTimeOverride[10];
+        static int minTimeCharLen;
+        static int minDateCharLen;
     };
 
     class DateAndTimeBytes
