@@ -15,8 +15,8 @@ DateAndTime DateAndTime::Null = DateAndTime();
 DateAndTimeBytes DateAndTimeBytes::Null = DateAndTimeBytes();
 char DateAndTime::compileDateOverride[] = "";
 char DateAndTime::compileTimeOverride[] = "";
-int DateAndTime::minDateCharLen = 10;
-int DateAndTime::minTimeCharLen = 7;
+int DateAndTime::minDateCharLen = 11;
+int DateAndTime::minTimeCharLen = 8;
 
 
 #pragma region ConvertTimeLocalHelperFunctions

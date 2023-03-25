@@ -43,8 +43,8 @@ namespace ArduinoGetPCDateTimeUtils
         void getCompileDateFromOverride();
         void getCompileTimeFromOverride();
         static GetCurrentDateAndTimeHanlderFunc currentDateAndTimeHandler;
-        static char compileDateOverride[10];
-        static char compileTimeOverride[10];
+        static char compileDateOverride[12];
+        static char compileTimeOverride[9];
         static int minTimeCharLen;
         static int minDateCharLen;
     };
