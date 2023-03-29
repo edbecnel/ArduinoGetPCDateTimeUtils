@@ -117,29 +117,25 @@ void setup()
     DateAndTime currTime;
     DateAndTime::getCurrentDateAndTime(currTime);
     currTime.addSeconds(15);
-    DaysAndTime above40TimeOfDay(0, currTime.hours, currTime.minutes, currTime.seconds);
-
-    currTime.addSeconds(15);
-    DaysAndTime below41TimeOfDay(0, currTime.hours, currTime.minutes, currTime.seconds);
+    DaysAndTime above41TimeOfDay(0, currTime.hours, currTime.minutes, currTime.seconds);
 
     // Temperature Alarm
-    // Above 40 threshold
-    TemperatureThreshold threshold(40, TemperatureThresholdType::Above, TemperatureThresholdTimeType::TimeOfDay, above40TimeOfDay);
+    // Above 41 threshold
+    TemperatureThreshold threshold(41, TemperatureThresholdType::Above, TemperatureThresholdTimeType::TimeOfDay, above41TimeOfDay);
     alarms[1] = Alarm(AlarmType::TemperatureThreshold, frequency);
     alarms[1].AddTemperatureThreshold(threshold);
 
-    // Below 41 threshold
+    // Below or equal to 41 threshold
     threshold.Temperature = 41;
-    threshold.Type = TemperatureThresholdType::Below;
-    // threshold.TimeType = TemperatureThresholdTimeType::TimeSpan;
-    // frequency.Set(0, 1, 0, 0);  // Once per hour
-    // threshold.Frequency = frequency;
-    threshold.TimeType = TemperatureThresholdTimeType::TimeOfDay;
-    threshold.Frequency = below41TimeOfDay;
+    threshold.Type = TemperatureThresholdType::BelowOrEqualTo;
+    threshold.TimeType = TemperatureThresholdTimeType::TimeSpan;
+    frequency.Set(0, 1, 0, 0);  // Once per hour
+    threshold.Frequency = frequency;
     alarms[1].AddTemperatureThreshold(threshold);
 
-    // Below 32 threshold
+    // BelowOrAt 32 threshold
     threshold.Temperature = 32;
+    threshold.Type = TemperatureThresholdType::BelowOrEqualTo;
     threshold.TimeType = TemperatureThresholdTimeType::TimeSpan;
     // frequency.Set(0, 0, 15, 0);  // Once every 15 minutes
     frequency.Set(0, 0, 0, 15);     // Once every 15 seconds
