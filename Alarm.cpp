@@ -1,8 +1,10 @@
 #include "DaysAndTime.h"
 #include "Alarm.h"
+#include "PrintUtils.h"
 #include <math.h>
 
 using namespace ArduinoGetPCDateTimeUtils;
+using namespace ArduinoPrintUtils;
 
 #pragma region Constructors
 
@@ -239,8 +241,8 @@ namespace ArduinoAlarm
 					}
 				}
 				break;
-			case TemperatureThresholdType::Below:
-				if (temperature < threshold.Temperature)
+			case TemperatureThresholdType::BelowOrEqualTo:
+				if (temperature <= threshold.Temperature)
 				{
 					if (threshold.Temperature < lowestThresholdTemperature)
 					{
@@ -301,6 +303,16 @@ namespace ArduinoAlarm
 	bool Alarm::TemperatureThresholdCrossed(int currTemperature)
 	{
 		int currIndex = GetThresholdIndexForTemperature(currTemperature);
+
+		//if (currIndex != _activeThresholdIndex)
+		//{
+		//	PrintUtils::print("currIndex = ");
+		//	PrintUtils::print(currIndex);
+		//	PrintUtils::print(" ");
+		//	PrintUtils::print("_activeThresholdIndex = ");
+		//	PrintUtils::print(_activeThresholdIndex, true);
+		//}
+
 		return (currIndex != _activeThresholdIndex) ? true : false;
 	}
 

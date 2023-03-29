@@ -14,7 +14,7 @@ namespace ArduinoAlarm
     {
         None = 0,
         Above = 1,
-        Below = 2,
+        BelowOrEqualTo = 2,
         IsEqual
     };
 
