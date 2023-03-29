@@ -55,18 +55,23 @@ namespace ArduinoAlarm
 				TemperatureThreshold threshold = GetTemperatureThresholdAt(thresholdIndex);
 				if (!threshold.IsNull())
 				{
-					if (_activeThresholdIndex == thresholdIndex &&
-						threshold.TimeType == TemperatureThresholdTimeType::TimeOfDay)
-					{
-						// Don't set a new trigger for TimeOfDay thresholds if the threshold hasn't changed
-						_thresholdTimeOfDayTriggerEnabled = false;
-					}
-					else
-					{
-						_activeThresholdIndex = thresholdIndex;
-						_thresholdTimeOfDayTriggerEnabled = true;
-						SetNewTrigger(threshold, startDateAndTime);
-					}
+					_activeThresholdIndex = thresholdIndex;
+					_thresholdTimeOfDayTriggerEnabled = true;
+					SetNewTrigger(threshold, startDateAndTime);
+
+					// Not sure why this is here. Disable for now until tested, then remove it if OK.
+					//if (_activeThresholdIndex == thresholdIndex &&
+					//	threshold.TimeType == TemperatureThresholdTimeType::TimeOfDay)
+					//{
+					//	// Don't set a new trigger for TimeOfDay thresholds if the threshold hasn't changed
+					//	_thresholdTimeOfDayTriggerEnabled = false;
+					//}
+					//else
+					//{
+					//	_activeThresholdIndex = thresholdIndex;
+					//	_thresholdTimeOfDayTriggerEnabled = true;
+					//	SetNewTrigger(threshold, startDateAndTime);
+					//}
 				}
 			}
 		}
